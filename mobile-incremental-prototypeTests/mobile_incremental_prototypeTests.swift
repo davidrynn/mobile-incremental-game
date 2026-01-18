@@ -10,8 +10,20 @@ import Testing
 
 struct mobile_incremental_prototypeTests {
 
-    @Test func example() async throws {
-        // Write your test here and use APIs like `#expect(...)` to check expected conditions.
+    @Test func primaryTapIncreasesResourceByOne() {
+        let initialState = GameState(resource: 0)
+
+        let updatedState = apply(action: .primaryTap, to: initialState)
+
+        #expect(updatedState.resource == 1)
     }
 
+    @Test func applyingMultipleActionsAccumulatesResource() {
+        let initialState = GameState(resource: 2)
+
+        let afterFirst = apply(action: .primaryTap, to: initialState)
+        let afterSecond = apply(action: .primaryTap, to: afterFirst)
+
+        #expect(afterSecond.resource == 4)
+    }
 }
