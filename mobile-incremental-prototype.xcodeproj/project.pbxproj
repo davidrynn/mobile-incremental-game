@@ -27,6 +27,7 @@
 		220EC8E92F1D3CEC00A32BFF /* mobile-incremental-prototype.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "mobile-incremental-prototype.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		220EC8F62F1D3CEE00A32BFF /* mobile-incremental-prototypeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "mobile-incremental-prototypeTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		220EC9002F1D3CEE00A32BFF /* mobile-incremental-prototypeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "mobile-incremental-prototypeUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		220EC9142F1D429600A32BFF /* PLAN.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PLAN.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -75,6 +76,7 @@
 		220EC8E02F1D3CEC00A32BFF = {
 			isa = PBXGroup;
 			children = (
+				220EC9132F1D428000A32BFF /* docs */,
 				220EC8EB2F1D3CEC00A32BFF /* mobile-incremental-prototype */,
 				220EC8F92F1D3CEE00A32BFF /* mobile-incremental-prototypeTests */,
 				220EC9032F1D3CEE00A32BFF /* mobile-incremental-prototypeUITests */,
@@ -90,6 +92,14 @@
 				220EC9002F1D3CEE00A32BFF /* mobile-incremental-prototypeUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		220EC9132F1D428000A32BFF /* docs */ = {
+			isa = PBXGroup;
+			children = (
+				220EC9142F1D429600A32BFF /* PLAN.md */,
+			);
+			path = docs;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
