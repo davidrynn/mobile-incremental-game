@@ -15,10 +15,21 @@ jobs:
         with:
           xcode-version: '16.1'
 
+      - name: Show Xcode version
+        run: |
+          xcode-select -p
+          xcodebuild -version
+
+      - name: List simulator runtimes
+        run: xcrun simctl list runtimes
+
+      - name: List available simulator devices
+        run: xcrun simctl list devices available
+
       - name: Run iOS unit tests
         run: |
           xcodebuild test \
             -project mobile-incremental-prototype.xcodeproj \
             -scheme mobile-incremental-prototype \
-            -destination 'platform=iOS Simulator,name=Any iOS Simulator Device' \
+            -destination 'platform=iOS Simulator' \
             CODE_SIGNING_ALLOWED=NO
