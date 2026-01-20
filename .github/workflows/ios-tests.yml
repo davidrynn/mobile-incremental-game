@@ -19,7 +19,7 @@ jobs:
       - name: List available simulator devices
         run: xcrun simctl list devices available
         
-        -name: List available schemes
+      - name: List available schemes
         run: -list
         
       - name: Checkout repository
