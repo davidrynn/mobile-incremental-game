@@ -27,7 +27,7 @@ jobs:
 
       - name: Run iOS unit tests
         run: |
-          xcodebuild test
+          xcodebuild test \
             -project mobile-incremental-prototype.xcodeproj \
             -scheme mobile-incremental-prototype \
             -destination 'platform=iOS Simulator,name=iPhone 17,platform=latest' \
