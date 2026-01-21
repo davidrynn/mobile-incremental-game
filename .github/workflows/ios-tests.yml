@@ -18,14 +18,11 @@ jobs:
 
       - name: List available simulator devices
         run: xcrun simctl list devices available
-        
-      - name: Checkout repository
-        uses: actions/checkout@v4
 
       - name: Run iOS unit tests
         run: |
           xcodebuild test \
             -project mobile-incremental-prototype.xcodeproj \
             -scheme mobile-incremental-prototype \
-            -destination 'platform=iOS Simulator,name=iPhone 17,platform=latest' \
+            -destination 'platform=iOS Simulator,name=iPhone 17,OS=latest' \
             CODE_SIGNING_ALLOWED=NO
