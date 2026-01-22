@@ -1,20 +1,17 @@
 name: iOS Unit Tests
 
-on:
-  push:
-  pull_request:
+on: [push, pull_request]
 
 jobs:
   test:
-    runs-on: macos-14
+    runs-on: macos-latest
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Run iOS unit tests
         run: |
           xcodebuild test \
             -project mobile-incremental-prototype.xcodeproj \
             -scheme mobile-incremental-prototype \
-            -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
+            -destination 'platform=iOS Simulator,name=iPhone 17,OS=latest' \
             CODE_SIGNING_ALLOWED=NO
