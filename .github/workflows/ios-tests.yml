@@ -10,19 +10,45 @@ jobs:
 
       - name: Show Xcode version
         run: |
-          xcode-select -p
           xcodebuild -version
+          xcode-select -p
 
-      - name: List simulator runtimes
-        run: xcrun simctl list runtimes
+      - name: Resolve an available iOS Simulator destination
+        id: dest
+        shell: bash
+        run: |
+          set -euo pipefail
 
-      - name: List available simulator devices
-        run: xcrun simctl list devices available
+          # Ask Xcode for destinations (JSON), then pick the first iOS Simulator destination id.
+          DEST_JSON="$(xcodebuild -showdestinations -project mobile-incremental-prototype.xcodeproj -scheme mobile-incremental-prototype -json)"
+          echo "$DEST_JSON" > destinations.json
+
+          SIM_ID="$(python3 - <<'PY'
+import json
+
+with open("destinations.json") as f:
+    data = json.load(f)
+
+# Xcode returns something like: {"destination":[{...},{...}]}
+dests = data.get("destination", data.get("destinations", []))
+if not isinstance(dests, list):
+    raise SystemExit("Unexpected JSON format from xcodebuild -showdestinations")
+
+sim = next((d for d in dests if d.get("platform") == "iOS Simulator" and d.get("id")), None)
+if not sim:
+    raise SystemExit("No iOS Simulator destination found in -showdestinations output")
+
+print(sim["id"])
+PY
+          )"
+
+          echo "Picked simulator destination id: $SIM_ID"
+          echo "SIM_ID=$SIM_ID" >> "$GITHUB_ENV"
 
       - name: Run iOS unit tests
         run: |
           xcodebuild test \
             -project mobile-incremental-prototype.xcodeproj \
             -scheme mobile-incremental-prototype \
-            -destination 'platform=iOS Simulator,name=iPhone 17,OS=latest' \
+            -destination "id=$SIM_ID" \
             CODE_SIGNING_ALLOWED=NO
