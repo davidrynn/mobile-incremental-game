@@ -10,45 +10,39 @@ jobs:
 
       - name: Show Xcode version
         run: |
-          xcodebuild -version
           xcode-select -p
+          xcodebuild -version
 
-      - name: Resolve an available iOS Simulator destination
-        id: dest
+      - name: Pick and boot an iPhone simulator
         shell: bash
         run: |
           set -euo pipefail
 
-          # Ask Xcode for destinations (JSON), then pick the first iOS Simulator destination id.
-          DEST_JSON="$(xcodebuild -showdestinations -project mobile-incremental-prototype.xcodeproj -scheme mobile-incremental-prototype -json)"
-          echo "$DEST_JSON" > destinations.json
+          echo "Available devices:"
+          xcrun simctl list devices available
 
-          SIM_ID="$(python3 - <<'PY'
-import json
+          # Pick the first available iPhone simulator UDID.
+          SIM_UDID=$(
+            xcrun simctl list devices available |
+            awk -F '[()]' '/iPhone/ && $0 ~ /available/ { print $2; exit }'
+          )
 
-with open("destinations.json") as f:
-    data = json.load(f)
+          if [[ -z "${SIM_UDID:-}" ]]; then
+            echo "ERROR: No available iPhone simulator found on this runner."
+            exit 1
+          fi
 
-# Xcode returns something like: {"destination":[{...},{...}]}
-dests = data.get("destination", data.get("destinations", []))
-if not isinstance(dests, list):
-    raise SystemExit("Unexpected JSON format from xcodebuild -showdestinations")
+          echo "Using simulator UDID: $SIM_UDID"
+          echo "SIM_UDID=$SIM_UDID" >> "$GITHUB_ENV"
 
-sim = next((d for d in dests if d.get("platform") == "iOS Simulator" and d.get("id")), None)
-if not sim:
-    raise SystemExit("No iOS Simulator destination found in -showdestinations output")
+          # Boot it (no-op if already booted)
+          xcrun simctl boot "$SIM_UDID" || true
+          xcrun simctl bootstatus "$SIM_UDID" -b
 
-print(sim["id"])
-PY
-          )"
-
-          echo "Picked simulator destination id: $SIM_ID"
-          echo "SIM_ID=$SIM_ID" >> "$GITHUB_ENV"
-
-      - name: Run iOS unit tests
+      - name: Run iOS tests
         run: |
           xcodebuild test \
             -project mobile-incremental-prototype.xcodeproj \
             -scheme mobile-incremental-prototype \
-            -destination "id=$SIM_ID" \
+            -destination "id=$SIM_UDID" \
             CODE_SIGNING_ALLOWED=NO
