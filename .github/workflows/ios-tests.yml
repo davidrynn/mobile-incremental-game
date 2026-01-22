@@ -6,15 +6,19 @@ on:
 
 jobs:
   test:
-    runs-on: macos-14
+    runs-on: macos-15
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '16.1'
 
       - name: Run iOS unit tests
         run: |
           xcodebuild test \
             -project mobile-incremental-prototype.xcodeproj \
             -scheme mobile-incremental-prototype \
-            -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
+            -destination 'platform=iOS Simulator,arch=arm64,id=B831CB90-4960-4EA6-B334-D33DE64D1450,OS=26.0.1,name=iPhone 16' \
             CODE_SIGNING_ALLOWED=NO
