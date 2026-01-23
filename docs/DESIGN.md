@@ -19,7 +19,7 @@ These are the behaviors we want the game to repeatedly trigger:
 4. **Meaningful upgrades**
    - Upgrades change *how it feels*, not only the rate.
 5. **Phase shifts**
-   - The game periodically changes what you’re doing (mine → haul → display), creating novelty while staying simple.
+   - The game periodically changes what you’re doing (mine → haul → display), creating novelty while staying simple. Each phase has at least one new screen.
 6. **Visible progression artifact**
    - A thing that grows/accumulates (museum/castle/cargo bay) to make progress feel physical and collectible.
 
