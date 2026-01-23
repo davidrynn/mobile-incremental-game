@@ -28,6 +28,51 @@ struct ContentView: View {
                     .padding()
             }
             .buttonStyle(.borderedProminent)
+
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Upgrades")
+                    .font(.headline)
+
+                ForEach(viewModel.upgrades) { upgrade in
+                    Button {
+                        viewModel.purchaseUpgrade(upgrade.id)
+                    } label: {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(upgrade.title)
+                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
+                                Text("Level \(upgrade.level)")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+
+                            Spacer()
+
+                            VStack(alignment: .trailing, spacing: 4) {
+                                if upgrade.isLocked {
+                                    Text("Locked")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                    if let requirementText = upgrade.requirementText {
+                                        Text(requirementText)
+                                            .font(.caption2)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                } else {
+                                    Text("Cost \(upgrade.cost)")
+                                        .font(.subheadline)
+                                        .fontWeight(.semibold)
+                                }
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.vertical, 8)
+                    }
+                    .buttonStyle(.bordered)
+                    .disabled(!upgrade.canPurchase)
+                }
+            }
         }
         .padding()
     }

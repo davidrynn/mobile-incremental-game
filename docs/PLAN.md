@@ -55,32 +55,32 @@
   - Ensure costs/benefits match formula across multiple levels.
 
 ## Milestones (small steps, 1–3 files max)
-1. **Project scaffold + test target**
+1. [x] **Project scaffold + test target**
    - Create SwiftUI app project and Swift Testing target.
    - Acceptance: project builds and tests run.
-2. **Core engine model (tests first)**
+2. [x] **Core engine model (tests first)**
    - Add `GameState`, `ActionType`, and `apply(action:)` with tests.
    - Acceptance: tests cover base action yield and state updates.
-3. **Upgrade system (tests first)**
+3. [x] **Upgrade system (tests first)**
    - Add `UpgradeType`, cost/effect formulas, purchase logic.
    - Acceptance: tests for affordability, cost scaling, and effect application.
-4. **Unlocks/soft gating (tests first)**
+4. [x] **Unlocks/soft gating (tests first)**
    - Add unlock thresholds for actions/upgrades.
    - Acceptance: tests for locked/unlocked state transitions.
-5. **SwiftUI binding layer**
+5. [x] **SwiftUI binding layer**
    - Observable wrapper around engine, basic UI: action button + resource display.
    - Acceptance: app runs, action updates resource on tap.
-6. **Upgrade UI list**
+6. [x] **Upgrade UI list**
    - List of upgrades with affordability/locked states.
    - Acceptance: purchasing upgrades updates state and UI.
 
 ## Acceptance criteria per milestone
-- **M1:** Xcode project builds, tests pass.
-- **M2:** Engine tests for base action pass, no SwiftUI dependencies.
-- **M3:** Upgrade tests pass with deterministic cost/effect.
-- **M4:** Unlock tests pass, gating works as specified.
-- **M5:** Tapping updates resources in UI.
-- **M6:** Upgrades visible, purchasable, and gated in UI.
+- [x] **M1:** Xcode project builds, tests pass.
+- [x] **M2:** Engine tests for base action pass, no SwiftUI dependencies.
+- [x] **M3:** Upgrade tests pass with deterministic cost/effect.
+- [x] **M4:** Unlock tests pass, gating works as specified.
+- [x] **M5:** Tapping updates resources in UI.
+- [x] **M6:** Upgrades visible, purchasable, and gated in UI.
 
 ## Approval gates
 After each milestone step, stop and request approval before continuing.
