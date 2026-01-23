@@ -6,12 +6,13 @@
 //
 
 import Foundation
+internal import Combine
 
 @MainActor
 final class GameViewModel: ObservableObject {
     @Published private(set) var state: GameState
 
-    init(state: GameState = GameState()) {
+    init(state: GameState) {
         self.state = state
     }
 
