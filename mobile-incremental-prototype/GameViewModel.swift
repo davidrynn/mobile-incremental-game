@@ -11,9 +11,11 @@ internal import Combine
 @MainActor
 final class GameViewModel: ObservableObject {
     @Published private(set) var state: GameState
+    private var hiddenState: HiddenState
 
-    init(state: GameState) {
+    init(state: GameState, hiddenState: HiddenState = HiddenState()) {
         self.state = state
+        self.hiddenState = hiddenState
     }
 
     var resourceText: String {
@@ -48,11 +50,15 @@ final class GameViewModel: ObservableObject {
     }
 
     func tapPrimaryAction() {
-        state = apply(action: .primaryTap, to: state)
+        let result = apply(action: .primaryTap, to: state, hiddenState: hiddenState)
+        state = result.state
+        hiddenState = result.hiddenState
     }
 
     func purchaseUpgrade(_ upgrade: UpgradeType) {
-        state = purchase(upgrade: upgrade, in: state)
+        let result = purchase(upgrade: upgrade, in: state, hiddenState: hiddenState)
+        state = result.state
+        hiddenState = result.hiddenState
     }
 }
 

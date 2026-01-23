@@ -12,8 +12,9 @@ struct mobile_incremental_prototypeTests {
 
     @Test func primaryTapIncreasesResourceByOne() {
         let initialState = GameState(resource: 0)
+        let initialHiddenState = HiddenState()
 
-        let updatedState = apply(action: .primaryTap, to: initialState)
+        let (updatedState, _) = apply(action: .primaryTap, to: initialState, hiddenState: initialHiddenState)
 
         #expect(updatedState.resource == 1)
         #expect(updatedState.totalResourceEarned == 1)
@@ -21,9 +22,10 @@ struct mobile_incremental_prototypeTests {
 
     @Test func applyingMultipleActionsAccumulatesResource() {
         let initialState = GameState(resource: 2)
+        let initialHiddenState = HiddenState()
 
-        let afterFirst = apply(action: .primaryTap, to: initialState)
-        let afterSecond = apply(action: .primaryTap, to: afterFirst)
+        let (afterFirst, afterFirstHidden) = apply(action: .primaryTap, to: initialState, hiddenState: initialHiddenState)
+        let (afterSecond, _) = apply(action: .primaryTap, to: afterFirst, hiddenState: afterFirstHidden)
 
         #expect(afterSecond.resource == 4)
         #expect(afterSecond.totalResourceEarned == 2)
@@ -31,8 +33,9 @@ struct mobile_incremental_prototypeTests {
 
     @Test func purchasingPrimaryYieldUpgradeConsumesResourceAndIncreasesYield() {
         let initialState = GameState(resource: 12, primaryYieldLevel: 0, totalResourceEarned: 5)
+        let initialHiddenState = HiddenState()
 
-        let updatedState = purchase(upgrade: .primaryYield, in: initialState)
+        let (updatedState, _) = purchase(upgrade: .primaryYield, in: initialState, hiddenState: initialHiddenState)
 
         #expect(updatedState.resource == 2)
         #expect(updatedState.primaryYieldLevel == 1)
@@ -40,8 +43,9 @@ struct mobile_incremental_prototypeTests {
 
     @Test func purchaseFailsWhenResourcesAreInsufficient() {
         let initialState = GameState(resource: 5, primaryYieldLevel: 0, totalResourceEarned: 5)
+        let initialHiddenState = HiddenState()
 
-        let updatedState = purchase(upgrade: .primaryYield, in: initialState)
+        let (updatedState, _) = purchase(upgrade: .primaryYield, in: initialState, hiddenState: initialHiddenState)
 
         #expect(updatedState == initialState)
     }
@@ -54,8 +58,9 @@ struct mobile_incremental_prototypeTests {
 
     @Test func primaryTapUsesUpgradeLevelForYield() {
         let initialState = GameState(resource: 0, primaryYieldLevel: 2, totalResourceEarned: 4)
+        let initialHiddenState = HiddenState()
 
-        let updatedState = apply(action: .primaryTap, to: initialState)
+        let (updatedState, _) = apply(action: .primaryTap, to: initialState, hiddenState: initialHiddenState)
 
         #expect(updatedState.resource == 3)
         #expect(updatedState.totalResourceEarned == 7)
@@ -73,8 +78,9 @@ struct mobile_incremental_prototypeTests {
 
     @Test func purchaseFailsWhenUpgradeIsLocked() {
         let initialState = GameState(resource: 20, primaryYieldLevel: 0, totalResourceEarned: 4)
+        let initialHiddenState = HiddenState()
 
-        let updatedState = purchase(upgrade: .primaryYield, in: initialState)
+        let (updatedState, _) = purchase(upgrade: .primaryYield, in: initialState, hiddenState: initialHiddenState)
 
         #expect(updatedState == initialState)
     }
