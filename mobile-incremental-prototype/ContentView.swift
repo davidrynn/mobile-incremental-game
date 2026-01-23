@@ -8,12 +8,26 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject private var viewModel = GameViewModel()
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        VStack(spacing: 24) {
+            VStack(spacing: 8) {
+                Text(viewModel.resourceText)
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                Text(viewModel.totalEarnedText)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+
+            Button(action: viewModel.tapPrimaryAction) {
+                Text("Tap to Collect")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+            }
+            .buttonStyle(.borderedProminent)
         }
         .padding()
     }
