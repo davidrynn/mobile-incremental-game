@@ -84,3 +84,10 @@
 
 ## Approval gates
 After each milestone step, stop and request approval before continuing.
+
+## Next steps (post-M6)
+- Add persistence layer (AppStorage or file-based) and migration strategy.
+- Expand upgrade variety (multipliers, action unlocks with cooldowns).
+- Add balancing pass for economy scaling and pacing.
+- Introduce lightweight feedback (haptics + SFX hooks) with toggle.
+- Add analytics hooks for session length and upgrade usage.
