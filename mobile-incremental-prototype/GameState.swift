@@ -7,11 +7,11 @@
 
 import Foundation
 
-enum ActionType: Equatable {
+enum ActionType: Equatable, Hashable {
     case primaryTap
 }
 
-enum UpgradeType: Equatable {
+enum UpgradeType: Equatable, Hashable, CaseIterable {
     case primaryYield
 }
 

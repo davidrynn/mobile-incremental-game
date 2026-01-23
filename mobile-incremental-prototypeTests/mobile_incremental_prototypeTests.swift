@@ -79,4 +79,24 @@ struct mobile_incremental_prototypeTests {
         #expect(updatedState == initialState)
     }
 
+    @Test @MainActor func upgradeViewStateShowsLockedAndRequirement() {
+        let viewModel = GameViewModel(state: GameState(resource: 0, primaryYieldLevel: 0, totalResourceEarned: 0))
+
+        let upgrade = try #require(viewModel.upgrades.first)
+
+        #expect(upgrade.isLocked == true)
+        #expect(upgrade.requirementText == "Unlock at 5 total earned")
+        #expect(upgrade.canPurchase == false)
+    }
+
+    @Test @MainActor func upgradeViewStateShowsCostWhenUnlocked() {
+        let viewModel = GameViewModel(state: GameState(resource: 20, primaryYieldLevel: 1, totalResourceEarned: 10))
+
+        let upgrade = try #require(viewModel.upgrades.first)
+
+        #expect(upgrade.isLocked == false)
+        #expect(upgrade.cost == 20)
+        #expect(upgrade.canPurchase == true)
+    }
+
 }
