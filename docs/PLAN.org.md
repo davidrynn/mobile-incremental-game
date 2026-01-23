@@ -30,6 +30,11 @@
   - Main action view (primary button + resource display).
   - Upgrade list view (disabled state when unaffordable/locked).
   - Progression summary (milestones/unlocks).
+- **Visual elements:**
+  - Primary action feedback (press state, glow, or bounce).
+  - Ambient backdrop tied to progression phase.
+  - Minimal progress indicators (milestones, streaks, or meters).
+  - Micro-animations on resource gain.
 
 ## Data model approach
 - Use structs/enums for all game definitions (e.g., `ActionType`, `UpgradeType`).
@@ -73,6 +78,10 @@
 6. [x] **Upgrade UI list**
    - List of upgrades with affordability/locked states.
    - Acceptance: purchasing upgrades updates state and UI.
+7. [ ] **Visual elements pass**
+   - Add minimal progress indicator to main view.
+   - Add button feedback (scale/glow/press).
+   - Add subtle background/ambient shift tied to progression.
 
 ## Acceptance criteria per milestone
 - [x] **M1:** Xcode project builds, tests pass.
