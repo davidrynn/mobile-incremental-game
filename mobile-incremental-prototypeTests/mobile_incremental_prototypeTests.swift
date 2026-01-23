@@ -104,6 +104,27 @@ struct mobile_incremental_prototypeTests {
         #expect(updatedHiddenState.pressure == 0)
     }
 
+    @Test func phaseTransitionsBasedOnTotalEarned() {
+        let gatherState = GameState(resource: 0, totalResourceEarned: 0)
+        let refineState = GameState(resource: 0, totalResourceEarned: 20)
+        let deliverState = GameState(resource: 0, totalResourceEarned: 60)
+
+        #expect(phase(for: gatherState) == .gather)
+        #expect(phase(for: refineState) == .refine)
+        #expect(phase(for: deliverState) == .deliver)
+    }
+
+    @Test func refinePhaseAmplifiesReleaseBursts() {
+        let refineState = GameState(resource: 0, primaryYieldLevel: 0, pressureValveLevel: 0, totalResourceEarned: 20)
+        let initialHiddenState = HiddenState(pressure: 3)
+
+        let (updatedState, updatedHiddenState) = apply(action: .primaryTap, to: refineState, hiddenState: initialHiddenState)
+
+        #expect(updatedState.resource == 3)
+        #expect(updatedState.totalResourceEarned == 23)
+        #expect(updatedHiddenState.pressure == 0)
+    }
+
     @Test @MainActor func upgradeViewStateShowsLockedAndRequirement() {
         let viewModel = GameViewModel(state: GameState(resource: 0, primaryYieldLevel: 0, totalResourceEarned: 0))
 

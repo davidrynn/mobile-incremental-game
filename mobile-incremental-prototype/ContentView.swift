@@ -73,14 +73,19 @@ struct ContentView: View {
 
     private var actionSection: some View {
         VStack(spacing: 12) {
-            Text("Tap to energize the core")
+            Text(viewModel.phaseText)
+                .font(.caption)
+                .fontWeight(.semibold)
+                .foregroundStyle(.white.opacity(0.8))
+
+            Text(viewModel.actionPrompt)
                 .font(.footnote)
                 .foregroundStyle(.white.opacity(0.7))
 
             Button(action: viewModel.tapPrimaryAction) {
                 HStack(spacing: 12) {
                     Image(systemName: "hand.tap.fill")
-                    Text("Tap to Collect")
+                    Text(viewModel.actionButtonTitle)
                         .font(.headline)
                 }
                 .frame(maxWidth: .infinity)
