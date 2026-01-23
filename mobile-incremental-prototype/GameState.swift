@@ -15,7 +15,7 @@ enum UpgradeType: Equatable {
     case primaryYield
 }
 
-struct GameState: Equatable {
+struct GameState: Equatable, Sendable {
     var resource: Int
     var primaryYieldLevel: Int
     var totalResourceEarned: Int

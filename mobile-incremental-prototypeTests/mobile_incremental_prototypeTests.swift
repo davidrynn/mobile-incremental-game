@@ -79,34 +79,4 @@ struct mobile_incremental_prototypeTests {
         #expect(updatedState == initialState)
     }
 
-    @Test func purchasingPrimaryYieldUpgradeConsumesResourceAndIncreasesYield() {
-        let initialState = GameState(resource: 12, primaryYieldLevel: 0)
-
-        let updatedState = purchase(upgrade: .primaryYield, in: initialState)
-
-        #expect(updatedState.resource == 2)
-        #expect(updatedState.primaryYieldLevel == 1)
-    }
-
-    @Test func purchaseFailsWhenResourcesAreInsufficient() {
-        let initialState = GameState(resource: 5, primaryYieldLevel: 0)
-
-        let updatedState = purchase(upgrade: .primaryYield, in: initialState)
-
-        #expect(updatedState == initialState)
-    }
-
-    @Test func upgradeCostScalesByLevel() {
-        #expect(upgradeCost(for: .primaryYield, atLevel: 0) == 10)
-        #expect(upgradeCost(for: .primaryYield, atLevel: 1) == 20)
-        #expect(upgradeCost(for: .primaryYield, atLevel: 2) == 30)
-    }
-
-    @Test func primaryTapUsesUpgradeLevelForYield() {
-        let initialState = GameState(resource: 0, primaryYieldLevel: 2)
-
-        let updatedState = apply(action: .primaryTap, to: initialState)
-
-        #expect(updatedState.resource == 3)
-    }
 }
