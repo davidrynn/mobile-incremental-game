@@ -13,16 +13,19 @@ enum ActionType: Equatable, Hashable {
 
 enum UpgradeType: Equatable, Hashable, CaseIterable {
     case primaryYield
+    case pressureValve
 }
 
 struct GameState: Equatable, Sendable {
     var resource: Int
     var primaryYieldLevel: Int
+    var pressureValveLevel: Int
     var totalResourceEarned: Int
 
-    init(resource: Int = 0, primaryYieldLevel: Int = 0, totalResourceEarned: Int = 0) {
+    init(resource: Int = 0, primaryYieldLevel: Int = 0, pressureValveLevel: Int = 0, totalResourceEarned: Int = 0) {
         self.resource = resource
         self.primaryYieldLevel = primaryYieldLevel
+        self.pressureValveLevel = pressureValveLevel
         self.totalResourceEarned = totalResourceEarned
     }
 }
@@ -42,7 +45,7 @@ func apply(action: ActionType, to state: GameState, hiddenState: HiddenState) ->
     switch action {
     case .primaryTap:
         let baseYield = 1 + nextState.primaryYieldLevel
-        let releaseThreshold = 4
+        let releaseThreshold = max(1, 4 - nextState.pressureValveLevel)
 
         nextHiddenState.pressure += baseYield
         let release = nextHiddenState.pressure / releaseThreshold
@@ -60,6 +63,8 @@ func upgradeUnlockThreshold(for upgrade: UpgradeType) -> Int {
     switch upgrade {
     case .primaryYield:
         return 5
+    case .pressureValve:
+        return 15
     }
 }
 
@@ -71,6 +76,8 @@ func upgradeCost(for upgrade: UpgradeType, atLevel level: Int) -> Int {
     switch upgrade {
     case .primaryYield:
         return 10 * (level + 1)
+    case .pressureValve:
+        return 25 * (level + 1)
     }
 }
 
@@ -89,6 +96,17 @@ func purchase(upgrade: UpgradeType, in state: GameState, hiddenState: HiddenStat
 
         nextState.resource -= cost
         nextState.primaryYieldLevel += 1
+    case .pressureValve:
+        guard isUpgradeUnlocked(upgrade, in: nextState) else {
+            return (nextState, hiddenState)
+        }
+        let cost = upgradeCost(for: upgrade, atLevel: nextState.pressureValveLevel)
+        guard nextState.resource >= cost else {
+            return (nextState, hiddenState)
+        }
+
+        nextState.resource -= cost
+        nextState.pressureValveLevel += 1
     }
 
     return (nextState, hiddenState)

@@ -54,6 +54,8 @@ struct mobile_incremental_prototypeTests {
         #expect(upgradeCost(for: .primaryYield, atLevel: 0) == 10)
         #expect(upgradeCost(for: .primaryYield, atLevel: 1) == 20)
         #expect(upgradeCost(for: .primaryYield, atLevel: 2) == 30)
+        #expect(upgradeCost(for: .pressureValve, atLevel: 0) == 25)
+        #expect(upgradeCost(for: .pressureValve, atLevel: 1) == 50)
     }
 
     @Test func primaryTapUsesUpgradeLevelForYield() {
@@ -74,6 +76,12 @@ struct mobile_incremental_prototypeTests {
         let unlockedState = GameState(resource: 10, primaryYieldLevel: 0, totalResourceEarned: 5)
 
         #expect(isUpgradeUnlocked(.primaryYield, in: unlockedState) == true)
+
+        let pressureValveLocked = GameState(resource: 20, primaryYieldLevel: 0, totalResourceEarned: 14)
+        let pressureValveUnlocked = GameState(resource: 20, primaryYieldLevel: 0, totalResourceEarned: 15)
+
+        #expect(isUpgradeUnlocked(.pressureValve, in: pressureValveLocked) == false)
+        #expect(isUpgradeUnlocked(.pressureValve, in: pressureValveUnlocked) == true)
     }
 
     @Test func purchaseFailsWhenUpgradeIsLocked() {
@@ -83,6 +91,17 @@ struct mobile_incremental_prototypeTests {
         let (updatedState, _) = purchase(upgrade: .primaryYield, in: initialState, hiddenState: initialHiddenState)
 
         #expect(updatedState == initialState)
+    }
+
+    @Test func pressureValveImprovesReleaseFrequency() {
+        let initialState = GameState(resource: 0, primaryYieldLevel: 0, pressureValveLevel: 1, totalResourceEarned: 0)
+        let initialHiddenState = HiddenState(pressure: 2)
+
+        let (updatedState, updatedHiddenState) = apply(action: .primaryTap, to: initialState, hiddenState: initialHiddenState)
+
+        #expect(updatedState.resource == 2)
+        #expect(updatedState.totalResourceEarned == 2)
+        #expect(updatedHiddenState.pressure == 0)
     }
 
     @Test @MainActor func upgradeViewStateShowsLockedAndRequirement() {
