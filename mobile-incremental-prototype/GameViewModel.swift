@@ -26,6 +26,43 @@ final class GameViewModel: ObservableObject {
         "Total earned: \(state.totalResourceEarned)"
     }
 
+    var currentPhase: Phase {
+        phase(for: state)
+    }
+
+    var phaseText: String {
+        switch currentPhase {
+        case .gather:
+            return "Phase: Break"
+        case .refine:
+            return "Phase: Refine"
+        case .deliver:
+            return "Phase: Deliver"
+        }
+    }
+
+    var actionPrompt: String {
+        switch currentPhase {
+        case .gather:
+            return "Apply force to build pressure"
+        case .refine:
+            return "Refine the stored pressure"
+        case .deliver:
+            return "Deliver stabilized output"
+        }
+    }
+
+    var actionButtonTitle: String {
+        switch currentPhase {
+        case .gather:
+            return "Break"
+        case .refine:
+            return "Refine"
+        case .deliver:
+            return "Deliver"
+        }
+    }
+
     var upgrades: [UpgradeViewState] {
         UpgradeType.allCases.map { upgrade in
             let level: Int

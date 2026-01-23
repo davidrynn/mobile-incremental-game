@@ -16,6 +16,12 @@ enum UpgradeType: Equatable, Hashable, CaseIterable {
     case pressureValve
 }
 
+enum Phase: Equatable, Hashable {
+    case gather
+    case refine
+    case deliver
+}
+
 struct GameState: Equatable, Sendable {
     var resource: Int
     var primaryYieldLevel: Int
@@ -38,20 +44,45 @@ struct HiddenState: Equatable, Sendable {
     }
 }
 
+func phase(for state: GameState) -> Phase {
+    if state.totalResourceEarned >= deliverPhaseThreshold {
+        return .deliver
+    }
+    if state.totalResourceEarned >= refinePhaseThreshold {
+        return .refine
+    }
+    return .gather
+}
+
 func apply(action: ActionType, to state: GameState, hiddenState: HiddenState) -> (state: GameState, hiddenState: HiddenState) {
     var nextState = state
     var nextHiddenState = hiddenState
 
     switch action {
     case .primaryTap:
+        let currentPhase = phase(for: nextState)
         let baseYield = 1 + nextState.primaryYieldLevel
         let releaseThreshold = max(1, 4 - nextState.pressureValveLevel)
 
-        nextHiddenState.pressure += baseYield
+        let pressureGain: Int
+        let releaseMultiplier: Int
+        switch currentPhase {
+        case .gather:
+            pressureGain = baseYield
+            releaseMultiplier = 1
+        case .refine:
+            pressureGain = max(1, baseYield - 1)
+            releaseMultiplier = 2
+        case .deliver:
+            pressureGain = 1
+            releaseMultiplier = 3
+        }
+
+        nextHiddenState.pressure += pressureGain
         let release = nextHiddenState.pressure / releaseThreshold
         nextHiddenState.pressure = nextHiddenState.pressure % releaseThreshold
 
-        let yield = baseYield + release
+        let yield = baseYield + (release * releaseMultiplier)
         nextState.resource += yield
         nextState.totalResourceEarned += yield
     }
@@ -111,3 +142,6 @@ func purchase(upgrade: UpgradeType, in state: GameState, hiddenState: HiddenStat
 
     return (nextState, hiddenState)
 }
+
+private let refinePhaseThreshold = 20
+private let deliverPhaseThreshold = 60
