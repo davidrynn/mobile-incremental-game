@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		224008DC2F231C65004B9D68 /* ios-tests.yml in Resources */ = {isa = PBXBuildFile; fileRef = 224008D92F231C65004B9D68 /* ios-tests.yml */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		220EC8F72F1D3CEE00A32BFF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -28,6 +32,7 @@
 		220EC8F62F1D3CEE00A32BFF /* mobile-incremental-prototypeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "mobile-incremental-prototypeTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		220EC9002F1D3CEE00A32BFF /* mobile-incremental-prototypeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "mobile-incremental-prototypeUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		220EC9142F1D429600A32BFF /* PLAN.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PLAN.md; sourceTree = "<group>"; };
+		224008D92F231C65004B9D68 /* ios-tests.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = "ios-tests.yml"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -76,6 +81,7 @@
 		220EC8E02F1D3CEC00A32BFF = {
 			isa = PBXGroup;
 			children = (
+				224008DB2F231C65004B9D68 /* .github */,
 				220EC9132F1D428000A32BFF /* docs */,
 				220EC8EB2F1D3CEC00A32BFF /* mobile-incremental-prototype */,
 				220EC8F92F1D3CEE00A32BFF /* mobile-incremental-prototypeTests */,
@@ -100,6 +106,22 @@
 				220EC9142F1D429600A32BFF /* PLAN.md */,
 			);
 			path = docs;
+			sourceTree = "<group>";
+		};
+		224008DA2F231C65004B9D68 /* workflows */ = {
+			isa = PBXGroup;
+			children = (
+				224008D92F231C65004B9D68 /* ios-tests.yml */,
+			);
+			path = workflows;
+			sourceTree = "<group>";
+		};
+		224008DB2F231C65004B9D68 /* .github */ = {
+			isa = PBXGroup;
+			children = (
+				224008DA2F231C65004B9D68 /* workflows */,
+			);
+			path = .github;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -222,6 +244,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				224008DC2F231C65004B9D68 /* ios-tests.yml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
