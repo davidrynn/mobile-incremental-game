@@ -116,6 +116,11 @@ Phases emerge from upgrades, not hard switches.
 - **SwiftUI layer**:
   - Dumb rendering
   - Observes visible state only
+- **Visual layer**:
+  - Primary action feedback (press states, glow, or bounce)
+  - Ambient backdrop tied to progression phase
+  - Small progress indicators (milestones, streaks, or charge meters)
+  - Optional micro-animations on resource gain
 
 ---
 
@@ -153,6 +158,10 @@ Phases emerge from upgrades, not hard switches.
    - One upgrade that changes progression behavior
 9. [ ] **Controlled chaos pass**
    - Validate long-term growth via tests
+10. [ ] **Visual elements pass**
+   - Add a minimal progress indicator
+   - Add button feedback (scale/glow/press)
+   - Add subtle background/ambient shift tied to progression
 
 ---
 
@@ -166,4 +175,3 @@ Phases emerge from upgrades, not hard switches.
 
 ## Approval gates
 After each milestone, stop and request approval before continuing.
-
