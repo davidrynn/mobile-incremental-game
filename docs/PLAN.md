@@ -1,93 +1,169 @@
-# Incremental Prototype Plan
+# Incremental Prototype Plan (Expanded – Controlled Chaos Edition)
 
-## Product vision (5–10 bullets)
-- Deliver a short, satisfying interactive incremental loop inspired by Digseum/Gnorp-style play.
-- Emphasize active input (taps/gestures) over idle gains; progress comes from engagement.
-- Provide quick feedback (numbers go up, sounds/haptics-ready hooks) without clutter.
-- Add a compact upgrade system that changes how actions feel and scale.
-- Introduce soft gating to pace discovery (unlock new actions/tiers after milestones).
-- Keep UI minimal: a primary action, clear resource display, and a focused upgrade list.
-- Maintain deterministic, testable core logic separate from SwiftUI.
-- Enable easy iteration on balancing via data-driven structs/enums.
-- Prepare for persistence later without implementing it now.
+## Product vision (expanded)
+- Deliver a short, satisfying **active incremental** loop inspired by Digseum/Gnorp-style play.
+- Keep the surface interaction extremely small (initially one button, one upgrade).
+- Allow progression to *feel* mysterious, emergent, or chaotic while remaining deterministic and testable.
+- Embrace strange outcomes as long as progress trends upward over time.
+- Favor upgrades that change **how progress behaves**, not just how fast numbers increase.
+- Preserve a strong separation between engine logic and SwiftUI.
+- Maintain a tiny visible UI while allowing large internal state growth.
+- Optimize for discovery, surprise, and “why did that just happen?” moments.
 
-## Core loop + progression loop
-- **Core loop (seconds):** Player performs a primary action (tap/press) to gain a base resource.
-- **Progression loop (minutes):** Spend resource on upgrades that:
-  - Increase yield per action.
-  - Unlock new actions (shorter loops or higher risk/reward).
-  - Introduce a secondary resource or multiplier after a threshold.
-- **Soft gating:** Upgrades unlock after reaching specific milestones (resource totals or upgrade levels).
+---
+
+## Core fantasy
+The player is not simply incrementing a number — they are **applying force to a resistant system**.
+Progress is the *result* of pressure, stress, instability, or other abstract forces resolving.
+
+This supports inspiration from Space Rock Breaker–style progression without simulating real physics.
+
+---
+
+## Core loop (seconds)
+- Player taps the primary button.
+- A **force/action** is applied to the system.
+- Visible resources increase as a *result* of hidden state resolution.
+
+> Important: the visible increment does **not** need to map 1:1 to taps.
+
+---
+
+## Progression loop (minutes)
+- Spend visible resources on upgrades.
+- Upgrades modify:
+  - How taps are interpreted
+  - How hidden variables interact
+  - When and how stored value is released
+- New behaviors unlock through milestones, not UI complexity.
+
+---
+
+## Hidden state system (new)
+Introduce internal-only variables that influence output but are not shown to the player.
+
+Examples (choose a small subset):
+- Pressure
+- Stress
+- Heat
+- Instability
+- Charge
+- Entropy
+
+Rules:
+- Hidden state is deterministic.
+- Hidden state is mutated by actions and upgrades.
+- Hidden state indirectly affects visible gains.
+
+---
+
+## “Fake algorithm” patterns (intentional)
+The engine may *appear* non-algorithmic while remaining fully testable.
+
+Allowed behaviors:
+- Threshold snapping (sudden jumps after invisible limits)
+- Delayed payout (stored value released in bursts)
+- Elastic resistance (diminishing returns that later invert)
+- State cycling (formulas rotate every N actions)
+- History-dependent output (recent behavior matters)
+
+Design rule:
+> If two systems interact in a surprising way but long-term progress remains positive, keep it.
+
+---
+
+## Upgrade philosophy (expanded)
+Upgrades should primarily:
+- Change relationships between variables
+- Alter resolution timing
+- Re-route excess values
+- Flip or bend scaling rules
+
+Avoid upgrades that are *only* flat +N unless they serve onboarding.
+
+---
+
+## Phases (implicit, no UI)
+The game may naturally pass through phases without explicit presentation:
+
+- Phase 0: Linear, understandable growth
+- Phase 1: Bursts and stalls
+- Phase 2: Unpredictable but accelerating gains
+- Phase 3: Player intuition replaces clarity
+
+Phases emerge from upgrades, not hard switches.
+
+---
 
 ## Systems/components breakdown
-- **State model:** `GameState` value type with resource counts, upgrade levels, and unlocked actions.
-- **Economy:** Deterministic cost/benefit calculations for upgrades and actions.
-- **Upgrades:** Tiered upgrades with scaling costs and effects.
-- **Actions:** Player-triggered actions with defined yields and optional cooldowns.
-- **Timers (if any):** Optional short cooldowns for special actions (but no idle gain).
-- **Persistence:** Placeholder protocol/abstraction, in-memory only for now.
-- **UI views:**
-  - Main action view (primary button + resource display).
-  - Upgrade list view (disabled state when unaffordable/locked).
-  - Progression summary (milestones/unlocks).
+- **GameState** (visible):
+  - Resources
+  - Purchased upgrades
+  - Unlock milestones
+
+- **HiddenState** (internal):
+  - Abstract variables (pressure, stress, etc.)
+  - No direct UI exposure
+
+- **GameEngine**:
+  - Pure functions
+  - Deterministic state transitions
+  - Applies actions and upgrades
+
+- **Upgrades**:
+  - Modify rules, not just values
+
+- **SwiftUI layer**:
+  - Dumb rendering
+  - Observes visible state only
+
+---
 
 ## Data model approach
-- Use structs/enums for all game definitions (e.g., `ActionType`, `UpgradeType`).
-- `GameState` as a pure value type; reducers/functions apply player inputs to state.
-- Deterministic simulation step:
-  - `apply(action:to:)` and `purchase(upgrade:in:)` functions.
-  - No randomness; all calculations are pure and deterministic.
-- Separation of concerns:
-  - Core logic in a `GameEngine` module (or folder) with no SwiftUI dependencies.
-  - SwiftUI binds to observable wrapper that delegates to the engine.
+- All definitions via enums/structs.
+- GameState + HiddenState updated together.
+- No randomness.
+- All outcomes reproducible from initial state + action sequence.
 
-## TDD strategy
-- **Test layers:**
-  - Unit tests for engine logic (resource gains, upgrade costs, unlocks).
-  - Unit tests for state transitions (actions and purchases).
-  - Minimal UI tests only after engine is stable.
-- **What to test first:**
-  - Base action yield.
-  - Upgrade purchase affordability and effects.
-  - Unlock thresholds for new actions/upgrades.
-- **Deterministic simulation testing:**
-  - Given initial `GameState`, applying action or purchase yields expected state.
-  - Ensure costs/benefits match formula across multiple levels.
+---
 
-## Milestones (small steps, 1–3 files max)
-1. [x] **Project scaffold + test target**
-   - Create SwiftUI app project and Swift Testing target.
-   - Acceptance: project builds and tests run.
-2. [x] **Core engine model (tests first)**
-   - Add `GameState`, `ActionType`, and `apply(action:)` with tests.
-   - Acceptance: tests cover base action yield and state updates.
-3. [x] **Upgrade system (tests first)**
-   - Add `UpgradeType`, cost/effect formulas, purchase logic.
-   - Acceptance: tests for affordability, cost scaling, and effect application.
-4. [x] **Unlocks/soft gating (tests first)**
-   - Add unlock thresholds for actions/upgrades.
-   - Acceptance: tests for locked/unlocked state transitions.
-5. [x] **SwiftUI binding layer**
-   - Observable wrapper around engine, basic UI: action button + resource display.
-   - Acceptance: app runs, action updates resource on tap.
-6. [x] **Upgrade UI list**
-   - List of upgrades with affordability/locked states.
-   - Acceptance: purchasing upgrades updates state and UI.
+## TDD strategy (adjusted)
+### Test what matters:
+- Progress is monotonic over long runs
+- No negative or invalid visible values
+- Upgrades apply expected rule changes
 
-## Acceptance criteria per milestone
-- [x] **M1:** Xcode project builds, tests pass.
-- [x] **M2:** Engine tests for base action pass, no SwiftUI dependencies.
-- [x] **M3:** Upgrade tests pass with deterministic cost/effect.
-- [x] **M4:** Unlock tests pass, gating works as specified.
-- [x] **M5:** Tapping updates resources in UI.
-- [x] **M6:** Upgrades visible, purchasable, and gated in UI.
+### Do NOT test:
+- Player-facing predictability
+- Short-term pacing feel
+
+---
+
+## Milestones (updated)
+1. [x] Project scaffold + test target
+2. [x] Core engine model (visible state)
+3. [x] Basic upgrade system
+4. [x] Unlocks / soft gating
+5. [x] SwiftUI binding layer
+6. [x] Upgrade UI list
+7. [ ] **Hidden state introduction**
+   - Add HiddenState struct
+   - Modify action resolution
+8. [ ] **Behavioral upgrade**
+   - One upgrade that changes progression behavior
+9. [ ] **Controlled chaos pass**
+   - Validate long-term growth via tests
+
+---
+
+## Acceptance philosophy
+- Short-term confusion is acceptable.
+- Long-term growth is required.
+- Determinism is mandatory.
+- Surprise is a feature.
+
+---
 
 ## Approval gates
-After each milestone step, stop and request approval before continuing.
+After each milestone, stop and request approval before continuing.
 
-## Next steps (post-M6)
-- Add persistence layer (AppStorage or file-based) and migration strategy.
-- Expand upgrade variety (multipliers, action unlocks with cooldowns).
-- Add balancing pass for economy scaling and pacing.
-- Introduce lightweight feedback (haptics + SFX hooks) with toggle.
-- Add analytics hooks for session length and upgrade usage.
