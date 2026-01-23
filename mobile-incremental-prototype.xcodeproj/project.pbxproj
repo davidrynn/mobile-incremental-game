@@ -33,6 +33,9 @@
 		220EC9002F1D3CEE00A32BFF /* mobile-incremental-prototypeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "mobile-incremental-prototypeUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		220EC9142F1D429600A32BFF /* PLAN.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PLAN.md; sourceTree = "<group>"; };
 		224008D92F231C65004B9D68 /* ios-tests.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = "ios-tests.yml"; sourceTree = "<group>"; };
+		224008DD2F23AC9E004B9D68 /* ai_instructions.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = ai_instructions.md; sourceTree = "<group>"; };
+		224008DE2F23AC9E004B9D68 /* DESIGN.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = DESIGN.md; sourceTree = "<group>"; };
+		224008DF2F23AC9E004B9D68 /* PLAN_GAMEPLAY.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PLAN_GAMEPLAY.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -104,6 +107,9 @@
 			isa = PBXGroup;
 			children = (
 				220EC9142F1D429600A32BFF /* PLAN.md */,
+				224008DD2F23AC9E004B9D68 /* ai_instructions.md */,
+				224008DE2F23AC9E004B9D68 /* DESIGN.md */,
+				224008DF2F23AC9E004B9D68 /* PLAN_GAMEPLAY.md */,
 			);
 			path = docs;
 			sourceTree = "<group>";
