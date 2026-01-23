@@ -27,17 +27,33 @@ struct GameState: Equatable, Sendable {
     }
 }
 
-func apply(action: ActionType, to state: GameState) -> GameState {
+struct HiddenState: Equatable, Sendable {
+    var pressure: Int
+
+    init(pressure: Int = 0) {
+        self.pressure = pressure
+    }
+}
+
+func apply(action: ActionType, to state: GameState, hiddenState: HiddenState) -> (state: GameState, hiddenState: HiddenState) {
     var nextState = state
+    var nextHiddenState = hiddenState
 
     switch action {
     case .primaryTap:
-        let yield = 1 + nextState.primaryYieldLevel
+        let baseYield = 1 + nextState.primaryYieldLevel
+        let releaseThreshold = 4
+
+        nextHiddenState.pressure += baseYield
+        let release = nextHiddenState.pressure / releaseThreshold
+        nextHiddenState.pressure = nextHiddenState.pressure % releaseThreshold
+
+        let yield = baseYield + release
         nextState.resource += yield
         nextState.totalResourceEarned += yield
     }
 
-    return nextState
+    return (nextState, nextHiddenState)
 }
 
 func upgradeUnlockThreshold(for upgrade: UpgradeType) -> Int {
@@ -58,22 +74,22 @@ func upgradeCost(for upgrade: UpgradeType, atLevel level: Int) -> Int {
     }
 }
 
-func purchase(upgrade: UpgradeType, in state: GameState) -> GameState {
+func purchase(upgrade: UpgradeType, in state: GameState, hiddenState: HiddenState) -> (state: GameState, hiddenState: HiddenState) {
     var nextState = state
 
     switch upgrade {
     case .primaryYield:
         guard isUpgradeUnlocked(upgrade, in: nextState) else {
-            return nextState
+            return (nextState, hiddenState)
         }
         let cost = upgradeCost(for: upgrade, atLevel: nextState.primaryYieldLevel)
         guard nextState.resource >= cost else {
-            return nextState
+            return (nextState, hiddenState)
         }
 
         nextState.resource -= cost
         nextState.primaryYieldLevel += 1
     }
 
-    return nextState
+    return (nextState, hiddenState)
 }
