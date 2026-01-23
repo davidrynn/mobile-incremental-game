@@ -88,6 +88,32 @@ final class GameViewModel: ObservableObject {
         }
     }
 
+    var pressureProgress: Double {
+        guard releaseThreshold > 0 else { return 1 }
+        return min(Double(hiddenState.pressure) / Double(releaseThreshold), 1)
+    }
+
+    var pressureStatusText: String {
+        "Pressure \(hiddenState.pressure)/\(releaseThreshold)"
+    }
+
+    var pressureHintText: String {
+        let phaseHint: String
+        switch currentPhase {
+        case .gather:
+            phaseHint = "Gather pressure quickly to prime the release."
+        case .refine:
+            phaseHint = "Refining doubles the release output."
+        case .deliver:
+            phaseHint = "Delivery triples the release output."
+        }
+
+        if releaseThreshold <= 1 {
+            return "\(phaseHint) Pressure releases instantly."
+        }
+        return "\(phaseHint) Release every \(releaseThreshold) pressure."
+    }
+
     func tapPrimaryAction() {
         let result = apply(action: .primaryTap, to: state, hiddenState: hiddenState)
         state = result.state
@@ -98,6 +124,10 @@ final class GameViewModel: ObservableObject {
         let result = purchase(upgrade: upgrade, in: state, hiddenState: hiddenState)
         state = result.state
         hiddenState = result.hiddenState
+    }
+
+    private var releaseThreshold: Int {
+        max(1, 4 - state.pressureValveLevel)
     }
 }
 

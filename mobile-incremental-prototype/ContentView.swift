@@ -24,6 +24,7 @@ struct ContentView: View {
                     headerSection
                     statsSection
                     actionSection
+                    pressureSection
                     milestoneSection
                     upgradesSection
                 }
@@ -188,6 +189,31 @@ struct ContentView: View {
         }
         .padding()
         .background(.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+    }
+
+    private var pressureSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("Pressure")
+                    .font(.headline)
+                    .foregroundStyle(.white)
+
+                Spacer()
+
+                Text(viewModel.pressureStatusText)
+                    .font(.caption)
+                    .foregroundStyle(.white.opacity(0.7))
+            }
+
+            ProgressView(value: viewModel.pressureProgress)
+                .tint(Color(red: 0.98, green: 0.62, blue: 0.28))
+
+            Text(viewModel.pressureHintText)
+                .font(.caption)
+                .foregroundStyle(.white.opacity(0.6))
+        }
+        .padding()
+        .background(.white.opacity(0.1), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
     }
 
     private var baseYield: Int {
