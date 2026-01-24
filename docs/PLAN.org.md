@@ -6,8 +6,8 @@
 - Provide quick feedback (numbers go up, sounds/haptics-ready hooks) without clutter.
 - Add a compact upgrade system that changes how actions feel and scale.
 - Introduce soft gating to pace discovery (unlock new actions/tiers after milestones).
-- Keep UI minimal: a primary action, clear resource display, and a focused upgrade list.
-- Maintain deterministic, testable core logic separate from SwiftUI.
+- Keep UI minimal: a primary action, clear resource display, and a focused upgrade list, split across dedicated phase screens.
+- Maintain deterministic, testable core logic separate from SwiftUI, with chance elements guarded and reproducible when seeded.
 - Enable easy iteration on balancing via data-driven structs/enums.
 - Prepare for persistence later without implementing it now.
 
@@ -27,7 +27,7 @@
 - **Timers (if any):** Optional short cooldowns for special actions (but no idle gain).
 - **Persistence:** Placeholder protocol/abstraction, in-memory only for now.
 - **UI views:**
-  - Main action view (primary button + resource display).
+  - Dedicated phase screens (primary action + resource display per phase).
   - Upgrade list view (disabled state when unaffordable/locked).
   - Progression summary (milestones/unlocks).
 - **Visual elements:**
@@ -41,7 +41,7 @@
 - `GameState` as a pure value type; reducers/functions apply player inputs to state.
 - Deterministic simulation step:
   - `apply(action:to:)` and `purchase(upgrade:in:)` functions.
-  - No randomness; all calculations are pure and deterministic.
+  - Chance-based outcomes are allowed with guardrails and seeded reproducibility.
 - Separation of concerns:
   - Core logic in a `GameEngine` module (or folder) with no SwiftUI dependencies.
   - SwiftUI binds to observable wrapper that delegates to the engine.

@@ -5,9 +5,9 @@
 ## Product vision (5–10 bullets)
 - Deliver a short, satisfying interactive incremental loop inspired by Digseum/Gnorp-style play.
 - Emphasize active input (taps/gestures) over idle gains; progress comes from engagement.
-- Keep UI minimal: a primary action, clear resource display, and a focused upgrade list. Use new views rather than over-clutter a single screen.
+- Keep UI minimal: a primary action, clear resource display, and a focused upgrade list. Use separate phase screens rather than over-clutter a single screen.
 - Ensure the game has **distinct phases** of play (break/gather → refine/upgrade → deliver/display).
-- Implement “controlled chaos”: outcomes can feel surprising while staying deterministic and testable.
+- Implement “controlled chaos”: outcomes can feel surprising with **chance elements** while staying testable.
 - Upgrades should primarily change **behavior**, not just add +N.
 - Maintain deterministic, testable core logic separate from SwiftUI.
 - Enable easy iteration on balancing via data-driven structs/enums.
@@ -23,11 +23,12 @@
 - **Economy:** Deterministic cost/benefit calculations for upgrades and conversions.
 - **Phases:** A small `Phase` enum driving what the main button does.
 - **Upgrades:** Tiered upgrades with scaling costs and behavior modifiers.
-- **Actions:** Player-triggered actions defined by current phase.
+- **Actions:** Player-triggered actions defined by current phase with chance-based bonuses.
 - **UI views:**
-  - Main action view (phase label + main button + resource display)
+  - Dedicated phase screens (phase label + main action + resource display)
   - Upgrade list view (disabled state when unaffordable/locked)
   - Artifact/progression track (e.g., displays/cargo/castle tier)
+  - Gathering mini-game surface (timing/pattern/streak) in the gather phase screen
 
 ## TDD strategy (gameplay-first)
 - Unit tests for engine logic:
@@ -45,8 +46,8 @@
 5. [x] **SwiftUI binding layer**
 6. [x] **Upgrade UI list**
 7. [ ] **Phases MVP (tests first)**
-   - Add `Phase` enum and route the main button behavior by phase.
-   - Minimal UI: phase label + button label changes.
+   - Add `Phase` enum and route behavior by phase.
+   - Minimal UI: dedicated screens per phase with phase label + action changes.
 8. [ ] **Add resources + conversions (tests first)**
    - Implement `Ore → Parts` conversion in Phase 1.
    - Implement `Parts → Displays` progress in Phase 2.

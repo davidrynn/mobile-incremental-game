@@ -14,14 +14,16 @@ These are the behaviors we want the game to repeatedly trigger:
    - Every tap produces a clear response (number change + micro-feedback).
 2. **Near-term goal tension**
    - “I’m close to the next upgrade / unlock / phase.”
-3. **Surprise without randomness**
-   - “Why did it spike?” (deterministic ‘fake chaos’ patterns).
+3. **Surprise with perceived chance**
+   - “Why did it spike?” (deterministic chaos or controlled RNG).
 4. **Meaningful upgrades**
    - Upgrades change *how it feels*, not only the rate.
 5. **Phase shifts**
-   - The game periodically changes what you’re doing (mine → haul → display), creating novelty while staying simple. Each phase has at least one new screen.
+   - The game periodically changes what you’re doing (mine → haul → display), creating novelty while staying simple. Each phase has its own screen.
 6. **Visible progression artifact**
    - A thing that grows/accumulates (museum/castle/cargo bay) to make progress feel physical and collectible.
+7. **Addictive phase loops**
+   - Every phase/mechanic should feel replayable on its own: clear feedback, escalating stakes, and a “just one more try” beat.
 
 ---
 
@@ -38,18 +40,20 @@ Keep theme flexible for now; implement mechanics in a theme-agnostic way.
 ---
 
 ## Phases of play (must exist, even if minimal UI)
-The game should have at least three phases. Each phase is a *mode* that changes what the main button does and what upgrades matter.
+The game should have at least three phases. Each phase is a *mode* with its **own screen**, and each phase’s mechanic should live in its **own separated logic** (per-phase reducer/engine module).
 
 ### Phase 0 — Break / Gather (starts here)
 - **Action:** Tap = Apply Force
 - **Output:** `Ore` (or `Rubble`)
 - **Hidden state:** pressure/stress/instability builds and resolves
+- **Chance/gameplay:** a lightweight gathering mini-game (timing window, streak meter, or pattern) with a chance-based bonus outcome
 - **Goal:** first meaningful upgrade + first unlock
 
 ### Phase 1 — Upgrade / Process
 Unlocked after milestone (e.g., total Ore, or first upgrade).
 - **Action:** Tap = Process/Refine (converts `Ore` → `Loot` or `Parts`)
 - **Output:** `Parts` (spent on upgrades) + occasional “artifact”
+- **Chance/gameplay:** conversion has a chance-based bonus (crit refine, extra artifact shard, etc.)
 - **Goal:** upgrade engine + unlock delivery/display
 
 ### Phase 2 — Deliver / Display (meta-progression)
@@ -59,9 +63,10 @@ Unlocked after milestone (e.g., enough Parts, or a specific upgrade).
   - museum display count
   - ship cargo bay filled
   - castle size tier
+- **Chance/gameplay:** delivery can occasionally “overfill” or add a bonus slot
 - **Goal:** complete a “set” to unlock new breaking layer / new tier
 
-> Phase switching does NOT require new screens. It can be a small banner + button label change.
+> Phase switching should use dedicated screens per phase (even if minimal).
 
 ---
 
@@ -90,8 +95,8 @@ This gives novelty without UI bloat.
 
 ---
 
-## “Controlled chaos” (deterministic surprise)
-We want spikes, stalls, bursts — but no true RNG.
+## “Controlled chaos” (chance or deterministic surprise)
+We want spikes, stalls, bursts — allow **chance-based outcomes** (especially in gathering) while keeping long-run growth testable.
 
 Allowed deterministic patterns:
 - **Threshold snap:** when `pressure` crosses N, next tap yields a burst
@@ -102,6 +107,7 @@ Allowed deterministic patterns:
 
 Design constraint:
 - Over long runs (e.g., 500 taps), total progress must increase monotonically.
+- Use **chance with guardrails** (e.g., weighted rewards, pity timers) to avoid dead streaks.
 
 ---
 
@@ -115,7 +121,7 @@ Upgrades should be categorized by *behavior*, not just numbers.
 
 ### Category B — Conversion shaping (Phase 1)
 - improves Ore→Parts conversion rate
-- introduces “artifact chance” via deterministic cadence (e.g., every 25th refine)
+- introduces “artifact chance” via a cadence or RNG (e.g., every 25th refine or a small chance per tap)
 
 ### Category C — Meta progression (Phase 2)
 - increases delivery capacity per tap
@@ -138,12 +144,13 @@ Even if the player doesn’t see hidden state, they must always have a visible �
 ## Minimal content for MVP (the slice Codex should implement)
 This is the smallest version that still feels like a game:
 
-1. Implement **3 phases** with one shared main button
+1. Implement **3 phases** with **separate screens** (one main action per screen)
 2. Implement **2 visible resources** + **1 visible artifact track**
    - Ore → Parts → Displays
 3. Implement **3 upgrades** (one per category)
    - one behavior-changing upgrade is mandatory
-4. Implement **one deterministic chaos pattern** (threshold snap OR delayed payout)
+4. Implement **one chaos pattern** (threshold snap, delayed payout, or chance-based bonus)
+5. Add a **gathering mini-game** (simple timing, streak, or pattern input)
 5. Implement a tiny UI:
    - resource counters
    - current phase label
@@ -159,9 +166,8 @@ Acceptance feel:
 
 ## What Codex should NOT do
 - Don’t add complex architectures, modules, or abstractions “just in case”.
-- Don’t add multiple screens unless requested.
 - Don’t add persistence yet (optional later).
-- Don’t add randomness; keep it deterministic.
+- Don’t add excessive RNG without guardrails.
 
 ---
 
