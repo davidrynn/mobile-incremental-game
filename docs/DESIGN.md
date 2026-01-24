@@ -128,6 +128,22 @@ Upgrades should be categorized by *behavior*, not just numbers.
 - unlocks new display slots / cargo bays / castle wings
 - completing sets unlocks a new “rock layer” back in Phase 0
 
+### Upgrade tech tree (planned)
+Build a **complex upgrade tech tree** that sequences meaningful upgrades across phases.
+The tech tree should:
+- gate upgrades behind milestones and prerequisites to create visible goals
+- introduce behavior-changing upgrades that unlock **new resource tiers**
+- reveal **different-looking screens** as branches unlock (e.g., new phase skins or layouts)
+- keep upgrades impactful so players can gather **more valuable resources** in later tiers
+ 
+This tree should be documented before implementation, with clear paths, costs, and screen unlocks.
+
+### Screen layout constraints (all phases)
+- Each phase screen should **fit all required information without scrolling**.
+- UI should keep primary actions and key resources visible at once.
+- Buttons **do not** need to fill the entire screen.
+- If more detail is needed, navigate to a **dedicated view** rather than adding scroll.
+
 ---
 
 ## Soft gating & unlocks (make goals obvious)
