@@ -77,6 +77,11 @@ struct ContentView: View {
                 statCard(title: "Base Yield", value: "\(baseYield)", icon: "bolt.fill")
                 statCard(title: "Release Rate", value: releaseRateText, icon: "gauge.with.dots.needle.bottom.50percent")
             }
+
+            HStack(spacing: 16) {
+                statCard(title: "Refine Boost", value: "x\(refineMultiplier)", icon: "wand.and.stars.inverse")
+                statCard(title: "Deliver Boost", value: "x\(deliverMultiplier)", icon: "shippingbox.fill")
+            }
         }
     }
 
@@ -169,6 +174,14 @@ struct ContentView: View {
 
     private var baseYield: Int {
         1 + viewModel.state.primaryYieldLevel
+    }
+
+    private var refineMultiplier: Int {
+        1 + viewModel.state.refinementCoilsLevel
+    }
+
+    private var deliverMultiplier: Int {
+        1 + viewModel.state.displayRigLevel
     }
 
     private var releaseRateText: String {
