@@ -13,5 +13,5 @@ jobs:
           xcodebuild test \
             -project mobile-incremental-prototype.xcodeproj \
             -scheme mobile-incremental-prototype \
-            -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
+            -destination 'platform=iOS Simulator,name=Any iOS Simulator Device,OS=latest' \
             CODE_SIGNING_ALLOWED=NO
