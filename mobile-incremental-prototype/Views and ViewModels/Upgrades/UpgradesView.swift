@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct UpgradesView: View {
-    @ObservedObject var viewModel: GameViewModel
+    @ObservedObject var viewModel: DashboardViewModel
 
     var body: some View {
         ZStack {
@@ -140,5 +140,5 @@ struct UpgradesView: View {
 }
 
 #Preview {
-    UpgradesView(viewModel: GameViewModel(state: GameState()))
+    UpgradesView(viewModel: DashboardViewModel(state: GameState()))
 }

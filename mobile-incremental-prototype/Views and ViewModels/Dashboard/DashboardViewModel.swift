@@ -1,5 +1,5 @@
 //
-//  GameViewModel.swift
+//  DashboardViewModel.swift
 //  mobile-incremental-prototype
 //
 //  Created by OpenAI on 2025-02-14.
@@ -9,11 +9,11 @@ import Foundation
 internal import Combine
 
 @MainActor
-final class GameViewModel: ObservableObject {
+final class DashboardViewModel: ObservableObject {
     @Published private(set) var state: GameState
     private var hiddenState: HiddenState
 
-    init(state: GameState, hiddenState: HiddenState = HiddenState()) {
+    init(state: GameState, hiddenState: HiddenState) {
         self.state = state
         self.hiddenState = hiddenState
     }

@@ -193,7 +193,7 @@ struct mobile_incremental_prototypeTests {
     }
 
     @Test @MainActor func upgradeViewStateShowsLockedAndRequirement() throws {
-        let viewModel = GameViewModel(state: GameState(ore: 0, primaryYieldLevel: 0, totalOreEarned: 0))
+        let viewModel = DashboardViewModel(state: GameState(ore: 0, primaryYieldLevel: 0, totalOreEarned: 0))
 
         let upgrade = try #require(viewModel.upgrades.first)
 
@@ -203,7 +203,7 @@ struct mobile_incremental_prototypeTests {
     }
 
     @Test @MainActor func upgradeViewStateShowsCostWhenUnlocked() throws {
-        let viewModel = GameViewModel(state: GameState(ore: 0, parts: 20, primaryYieldLevel: 1, totalOreEarned: 10))
+        let viewModel = DashboardViewModel(state: GameState(ore: 0, parts: 20, primaryYieldLevel: 1, totalOreEarned: 10))
 
         let upgrade = try #require(viewModel.upgrades.first)
 

@@ -11,7 +11,7 @@ import SwiftUI
 struct mobile_incremental_prototypeApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            Dashboard()
         }
     }
 }

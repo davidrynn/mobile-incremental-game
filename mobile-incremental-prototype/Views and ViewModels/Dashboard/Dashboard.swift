@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct ContentView: View {
-    @StateObject private var viewModel = GameViewModel(state: GameState())
+struct Dashboard: View {
+    @StateObject private var viewModel = DashboardViewModel(state: GameState())
 
     var body: some View {
         NavigationStack {
@@ -267,31 +267,10 @@ struct ContentView: View {
 
     private var releaseRateText: String {
         let threshold = max(1, 4 - viewModel.state.pressureValveLevel)
-        if threshold <= 1 {
-            return "Instant"
-        }
-        return "Every \(threshold)x"
+        return "\(threshold)x"
     }
 
-    private func statCard(title: String, value: String, icon: String) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                Image(systemName: icon)
-                    .foregroundStyle(.white.opacity(0.7))
-                Spacer()
-            }
-            Text(value)
-                .font(.title2)
-                .fontWeight(.semibold)
-                .foregroundStyle(.white)
-            Text(title)
-                .font(.caption)
-                .foregroundStyle(.white.opacity(0.7))
-        }
-        .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.white.opacity(0.12), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-    }
+    
 }
 
 #Preview {
