@@ -5,7 +5,7 @@
 ## Product vision (5–10 bullets)
 - Deliver a short, satisfying interactive incremental loop inspired by Digseum/Gnorp-style play.
 - Emphasize active input (taps/gestures) over idle gains; progress comes from engagement.
-- Keep UI minimal: a primary action, clear resource display, and a focused upgrade list.
+- Keep UI minimal: a primary action, clear resource display, and a focused upgrade list. Use new views rather than over-clutter a single screen.
 - Ensure the game has **distinct phases** of play (break/gather → refine/upgrade → deliver/display).
 - Implement “controlled chaos”: outcomes can feel surprising while staying deterministic and testable.
 - Upgrades should primarily change **behavior**, not just add +N.
