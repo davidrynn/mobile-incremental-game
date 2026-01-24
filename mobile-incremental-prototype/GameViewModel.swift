@@ -71,6 +71,10 @@ final class GameViewModel: ObservableObject {
                 level = state.primaryYieldLevel
             case .pressureValve:
                 level = state.pressureValveLevel
+            case .refinementCoils:
+                level = state.refinementCoilsLevel
+            case .displayRig:
+                level = state.displayRigLevel
             }
 
             let cost = upgradeCost(for: upgrade, atLevel: level)
@@ -148,6 +152,10 @@ private extension UpgradeType {
             return "Primary Yield"
         case .pressureValve:
             return "Pressure Valve"
+        case .refinementCoils:
+            return "Refinement Coils"
+        case .displayRig:
+            return "Display Rig"
         }
     }
 }

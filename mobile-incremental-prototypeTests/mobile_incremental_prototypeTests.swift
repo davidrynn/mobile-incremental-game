@@ -56,6 +56,8 @@ struct mobile_incremental_prototypeTests {
         #expect(upgradeCost(for: .primaryYield, atLevel: 2) == 30)
         #expect(upgradeCost(for: .pressureValve, atLevel: 0) == 25)
         #expect(upgradeCost(for: .pressureValve, atLevel: 1) == 50)
+        #expect(upgradeCost(for: .refinementCoils, atLevel: 0) == 40)
+        #expect(upgradeCost(for: .displayRig, atLevel: 0) == 55)
     }
 
     @Test func primaryTapUsesUpgradeLevelForYield() {
@@ -126,6 +128,16 @@ struct mobile_incremental_prototypeTests {
         #expect(updatedHiddenState.pressure == 0)
     }
 
+    @Test func refinementCoilsIncreaseOreToPartsConversion() {
+        let refineState = GameState(ore: 5, refinementCoilsLevel: 1, totalOreEarned: 20)
+        let initialHiddenState = HiddenState()
+
+        let (updatedState, _) = apply(action: .primaryTap, to: refineState, hiddenState: initialHiddenState)
+
+        #expect(updatedState.ore == 3)
+        #expect(updatedState.parts == 2)
+    }
+
     @Test func deliverPhaseConvertsPartsIntoDisplays() {
         let deliverState = GameState(parts: 4, primaryYieldLevel: 0, pressureValveLevel: 0, totalOreEarned: 60)
         let initialHiddenState = HiddenState(pressure: 3)
@@ -135,6 +147,16 @@ struct mobile_incremental_prototypeTests {
         #expect(updatedState.parts == 0)
         #expect(updatedState.displays == 4)
         #expect(updatedHiddenState.pressure == 0)
+    }
+
+    @Test func displayRigBoostsDeliveryConversion() {
+        let deliverState = GameState(parts: 5, displayRigLevel: 1, totalOreEarned: 60)
+        let initialHiddenState = HiddenState()
+
+        let (updatedState, _) = apply(action: .primaryTap, to: deliverState, hiddenState: initialHiddenState)
+
+        #expect(updatedState.parts == 3)
+        #expect(updatedState.displays == 2)
     }
 
     @Test @MainActor func upgradeViewStateShowsLockedAndRequirement() throws {

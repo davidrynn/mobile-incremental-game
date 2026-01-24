@@ -14,6 +14,8 @@ enum ActionType: Equatable, Hashable {
 enum UpgradeType: Equatable, Hashable, CaseIterable {
     case primaryYield
     case pressureValve
+    case refinementCoils
+    case displayRig
 }
 
 enum Phase: Equatable, Hashable {
@@ -28,6 +30,8 @@ struct GameState: Equatable, Sendable {
     var displays: Int
     var primaryYieldLevel: Int
     var pressureValveLevel: Int
+    var refinementCoilsLevel: Int
+    var displayRigLevel: Int
     var totalOreEarned: Int
 
     init(
@@ -36,6 +40,8 @@ struct GameState: Equatable, Sendable {
         displays: Int = 0,
         primaryYieldLevel: Int = 0,
         pressureValveLevel: Int = 0,
+        refinementCoilsLevel: Int = 0,
+        displayRigLevel: Int = 0,
         totalOreEarned: Int = 0
     ) {
         self.ore = ore
@@ -43,6 +49,8 @@ struct GameState: Equatable, Sendable {
         self.displays = displays
         self.primaryYieldLevel = primaryYieldLevel
         self.pressureValveLevel = pressureValveLevel
+        self.refinementCoilsLevel = refinementCoilsLevel
+        self.displayRigLevel = displayRigLevel
         self.totalOreEarned = totalOreEarned
     }
 }
@@ -99,11 +107,13 @@ func apply(action: ActionType, to state: GameState, hiddenState: HiddenState) ->
             nextState.ore += yield
             nextState.totalOreEarned += yield
         case .refine:
-            let convertible = min(nextState.ore, yield)
+            let refinementMultiplier = 1 + nextState.refinementCoilsLevel
+            let convertible = min(nextState.ore, yield * refinementMultiplier)
             nextState.ore -= convertible
             nextState.parts += convertible
         case .deliver:
-            let convertible = min(nextState.parts, yield)
+            let displayMultiplier = 1 + nextState.displayRigLevel
+            let convertible = min(nextState.parts, yield * displayMultiplier)
             nextState.parts -= convertible
             nextState.displays += convertible
         }
@@ -118,6 +128,10 @@ func upgradeUnlockThreshold(for upgrade: UpgradeType) -> Int {
         return 5
     case .pressureValve:
         return 15
+    case .refinementCoils:
+        return 30
+    case .displayRig:
+        return 45
     }
 }
 
@@ -131,6 +145,10 @@ func upgradeCost(for upgrade: UpgradeType, atLevel level: Int) -> Int {
         return 10 * (level + 1)
     case .pressureValve:
         return 25 * (level + 1)
+    case .refinementCoils:
+        return 40 * (level + 1)
+    case .displayRig:
+        return 55 * (level + 1)
     }
 }
 
@@ -160,6 +178,28 @@ func purchase(upgrade: UpgradeType, in state: GameState, hiddenState: HiddenStat
 
         nextState.parts -= cost
         nextState.pressureValveLevel += 1
+    case .refinementCoils:
+        guard isUpgradeUnlocked(upgrade, in: nextState) else {
+            return (nextState, hiddenState)
+        }
+        let cost = upgradeCost(for: upgrade, atLevel: nextState.refinementCoilsLevel)
+        guard nextState.parts >= cost else {
+            return (nextState, hiddenState)
+        }
+
+        nextState.parts -= cost
+        nextState.refinementCoilsLevel += 1
+    case .displayRig:
+        guard isUpgradeUnlocked(upgrade, in: nextState) else {
+            return (nextState, hiddenState)
+        }
+        let cost = upgradeCost(for: upgrade, atLevel: nextState.displayRigLevel)
+        guard nextState.parts >= cost else {
+            return (nextState, hiddenState)
+        }
+
+        nextState.parts -= cost
+        nextState.displayRigLevel += 1
     }
 
     return (nextState, hiddenState)
