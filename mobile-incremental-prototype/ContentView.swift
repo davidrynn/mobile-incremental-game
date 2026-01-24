@@ -20,17 +20,12 @@ struct ContentView: View {
                 )
                 .ignoresSafeArea()
 
-                ScrollView {
-                    VStack(spacing: 24) {
-                        headerSection
-                        statsSection
-                        actionSection
-                        cadenceSection
-                        pressureSection
-                        workshopSection
-                    }
-                    .padding()
+                VStack(spacing: 24) {
+                    headerSection
+                    phaseContent
+                    workshopSection
                 }
+                .padding()
             }
             .navigationTitle("Steamworks")
             .navigationBarTitleDisplayMode(.inline)
@@ -62,7 +57,49 @@ struct ContentView: View {
         }
     }
 
-    private var statsSection: some View {
+    @ViewBuilder
+    private var phaseContent: some View {
+        switch viewModel.currentPhase {
+        case .gather:
+            gatherPhaseSection
+        case .refine:
+            refinePhaseSection
+        case .deliver:
+            deliverPhaseSection
+        }
+    }
+
+    private var gatherPhaseSection: some View {
+        VStack(spacing: 20) {
+            resourceSection
+            actionSection
+            cadenceSection
+            pressureSection
+            Spacer(minLength: 0)
+        }
+    }
+
+    private var refinePhaseSection: some View {
+        VStack(spacing: 20) {
+            resourceSection
+            actionSection
+            pressureSection
+            boostSection
+            Spacer(minLength: 0)
+        }
+    }
+
+    private var deliverPhaseSection: some View {
+        VStack(spacing: 20) {
+            resourceSection
+            actionSection
+            pressureSection
+            boostSection
+            Spacer(minLength: 0)
+        }
+    }
+
+    private var resourceSection: some View {
         VStack(spacing: 16) {
             HStack(spacing: 16) {
                 statCard(title: "Ore", value: "\(viewModel.state.ore)", icon: "mountain.2.fill")
@@ -72,6 +109,17 @@ struct ContentView: View {
             HStack(spacing: 16) {
                 statCard(title: "Displays", value: "\(viewModel.state.displays)", icon: "photo.on.rectangle.angled")
                 statCard(title: "Total Ore", value: "\(viewModel.state.totalOreEarned)", icon: "chart.line.uptrend.xyaxis")
+            }
+        }
+    }
+
+    private var boostSection: some View {
+        VStack(spacing: 12) {
+            HStack {
+                Text("Workshop Boosts")
+                    .font(.headline)
+                    .foregroundStyle(.white)
+                Spacer()
             }
 
             HStack(spacing: 16) {
@@ -84,6 +132,8 @@ struct ContentView: View {
                 statCard(title: "Deliver Boost", value: "x\(deliverMultiplier)", icon: "shippingbox.fill")
             }
         }
+        .padding()
+        .background(.white.opacity(0.1), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
     }
 
     private var actionSection: some View {
