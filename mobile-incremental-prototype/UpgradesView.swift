@@ -76,47 +76,56 @@ struct UpgradesView: View {
                 .font(.headline)
                 .foregroundStyle(.white)
 
-            ForEach(viewModel.upgrades) { upgrade in
-                Button {
-                    viewModel.purchaseUpgrade(upgrade.id)
-                } label: {
-                    HStack {
+            let columns = Array(repeating: GridItem(.flexible(), spacing: 12), count: 4)
+
+            LazyVGrid(columns: columns, spacing: 12) {
+                ForEach(viewModel.upgrades) { upgrade in
+                    Button {
+                        viewModel.purchaseUpgrade(upgrade.id)
+                    } label: {
                         VStack(alignment: .leading, spacing: 6) {
                             Text(upgrade.title)
-                                .font(.subheadline)
+                                .font(.caption)
                                 .fontWeight(.semibold)
                                 .foregroundStyle(.white)
-                            Text("Level \(upgrade.level)")
-                                .font(.caption)
+                                .lineLimit(2)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+
+                            Text("Lv \(upgrade.level)")
+                                .font(.caption2)
                                 .foregroundStyle(.white.opacity(0.7))
-                        }
 
-                        Spacer()
+                            Spacer(minLength: 0)
 
-                        VStack(alignment: .trailing, spacing: 4) {
                             if upgrade.isLocked {
                                 Text("Locked")
-                                    .font(.caption)
-                                    .foregroundStyle(.white.opacity(0.7))
+                                    .font(.caption2)
+                                    .foregroundStyle(.white.opacity(0.6))
                                 if let requirementText = upgrade.requirementText {
                                     Text(requirementText)
                                         .font(.caption2)
-                                        .foregroundStyle(.white.opacity(0.6))
+                                        .foregroundStyle(.white.opacity(0.5))
+                                        .lineLimit(2)
                                 }
                             } else {
                                 Text("Cost \(upgrade.cost)")
-                                    .font(.subheadline)
+                                    .font(.caption)
                                     .fontWeight(.semibold)
                                     .foregroundStyle(.white)
                             }
                         }
+                        .padding(10)
+                        .frame(maxWidth: .infinity, minHeight: 96, alignment: .leading)
+                        .background(.white.opacity(0.12), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                .stroke(.white.opacity(0.2), lineWidth: 1)
+                        )
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.vertical, 8)
+                    .buttonStyle(.plain)
+                    .disabled(!upgrade.canPurchase)
+                    .opacity(upgrade.canPurchase ? 1 : 0.6)
                 }
-                .buttonStyle(.bordered)
-                .tint(.white.opacity(0.15))
-                .disabled(!upgrade.canPurchase)
             }
         }
         .padding()

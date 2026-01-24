@@ -100,16 +100,13 @@ struct ContentView: View {
     }
 
     private var resourceSection: some View {
-        VStack(spacing: 16) {
-            HStack(spacing: 16) {
-                statCard(title: "Ore", value: "\(viewModel.state.ore)", icon: "mountain.2.fill")
-                statCard(title: "Parts", value: "\(viewModel.state.parts)", icon: "gearshape.2.fill")
-            }
+        let columns = Array(repeating: GridItem(.flexible(), spacing: 12), count: 4)
 
-            HStack(spacing: 16) {
-                statCard(title: "Displays", value: "\(viewModel.state.displays)", icon: "photo.on.rectangle.angled")
-                statCard(title: "Total Ore", value: "\(viewModel.state.totalOreEarned)", icon: "chart.line.uptrend.xyaxis")
-            }
+        return LazyVGrid(columns: columns, spacing: 12) {
+            statCard(title: "Ore", value: "\(viewModel.state.ore)", icon: "mountain.2.fill")
+            statCard(title: "Parts", value: "\(viewModel.state.parts)", icon: "gearshape.2.fill")
+            statCard(title: "Displays", value: "\(viewModel.state.displays)", icon: "photo.on.rectangle.angled")
+            statCard(title: "Total Ore", value: "\(viewModel.state.totalOreEarned)", icon: "chart.line.uptrend.xyaxis")
         }
     }
 
@@ -122,12 +119,11 @@ struct ContentView: View {
                 Spacer()
             }
 
-            HStack(spacing: 16) {
+            let columns = Array(repeating: GridItem(.flexible(), spacing: 12), count: 4)
+
+            LazyVGrid(columns: columns, spacing: 12) {
                 statCard(title: "Base Yield", value: "\(baseYield)", icon: "bolt.fill")
                 statCard(title: "Release Rate", value: releaseRateText, icon: "gauge.with.dots.needle.bottom.50percent")
-            }
-
-            HStack(spacing: 16) {
                 statCard(title: "Refine Boost", value: "x\(refineMultiplier)", icon: "wand.and.stars.inverse")
                 statCard(title: "Deliver Boost", value: "x\(deliverMultiplier)", icon: "shippingbox.fill")
             }
