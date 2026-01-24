@@ -212,4 +212,16 @@ struct mobile_incremental_prototypeTests {
         #expect(upgrade.canPurchase == true)
     }
 
+    @Test @MainActor func statCardsProvidePopoverDetails() throws {
+        let viewModel = DashboardViewModel(state: GameState())
+
+        let boost = try #require(viewModel.boosts.first)
+        let resource = try #require(viewModel.resources.first)
+
+        #expect(boost.description.isEmpty == false)
+        #expect(boost.detailLines.isEmpty == false)
+        #expect(resource.description.isEmpty == false)
+        #expect(resource.detailLines.isEmpty == false)
+    }
+
 }

@@ -40,19 +40,91 @@ final class DashboardViewModel: ObservableObject {
     
     var boosts: [StatCardViewModel] {
         [
-            StatCardViewModel(title: "Base Yield", value: "\(baseYield)", icon: "bolt.fill"),
-            StatCardViewModel(title: "Release Rate", value: releaseRateText, icon: "gauge.with.dots.needle.bottom.50percent"),
-            StatCardViewModel(title: "Refine Boost", value: "x\(refineMultiplier)", icon: "wand.and.stars.inverse"),
-            StatCardViewModel(title: "Deliver Boost", value: "x\(deliverMultiplier)", icon: "shippingbox.fill")
+            StatCardViewModel(
+                title: "Base Yield",
+                value: "\(baseYield)",
+                icon: "bolt.fill",
+                description: "Ore gained per tap and per pressure release.",
+                detailLines: [
+                    "Increases pressure gain during Break.",
+                    "Improves burst size across all phases."
+                ]
+            ),
+            StatCardViewModel(
+                title: "Release Rate",
+                value: releaseRateText,
+                icon: "gauge.with.dots.needle.bottom.50percent",
+                description: "How often stored pressure converts to bonus yield.",
+                detailLines: [
+                    "Higher rate means more frequent bursts.",
+                    "Upgraded by Pressure Valves."
+                ]
+            ),
+            StatCardViewModel(
+                title: "Refine Boost",
+                value: "x\(refineMultiplier)",
+                icon: "wand.and.stars.inverse",
+                description: "Multiplier on ore-to-parts conversion in Refine.",
+                detailLines: [
+                    "Each coil level adds +1x.",
+                    "Only active during the Refine phase."
+                ]
+            ),
+            StatCardViewModel(
+                title: "Deliver Boost",
+                value: "x\(deliverMultiplier)",
+                icon: "shippingbox.fill",
+                description: "Multiplier on parts-to-displays conversion in Deliver.",
+                detailLines: [
+                    "Each rig level adds +1x.",
+                    "Only active during the Deliver phase."
+                ]
+            )
         ]
     }
     
     var resources: [StatCardViewModel] {
         [
-            StatCardViewModel(title: "Ore", value: "\(state.ore)", icon: "mountain.2.fill"),
-            StatCardViewModel(title: "Parts", value: "\(state.parts)", icon: "gearshape.2.fill"),
-            StatCardViewModel(title: "Displays", value: "\(state.displays)", icon: "photo.on.rectangle.angled"),
-            StatCardViewModel(title: "Total Ore", value: "\(state.totalOreEarned)", icon: "chart.line.uptrend.xyaxis")
+            StatCardViewModel(
+                title: "Ore",
+                value: "\(state.ore)",
+                icon: "mountain.2.fill",
+                description: "Raw material earned during Break.",
+                detailLines: [
+                    "Converted into parts in Refine.",
+                    "Spent indirectly through conversions."
+                ]
+            ),
+            StatCardViewModel(
+                title: "Parts",
+                value: "\(state.parts)",
+                icon: "gearshape.2.fill",
+                description: "Intermediate goods produced in Refine.",
+                detailLines: [
+                    "Used to buy upgrades.",
+                    "Converted into displays in Deliver."
+                ]
+            ),
+            StatCardViewModel(
+                title: "Displays",
+                value: "\(state.displays)",
+                icon: "photo.on.rectangle.angled",
+                description: "Finished output created in Deliver.",
+                detailLines: [
+                    "Represents installed results.",
+                    "Grows with Deliver boosts."
+                ]
+            ),
+            StatCardViewModel(
+                title: "Total Ore",
+                value: "\(state.totalOreEarned)",
+                icon: "chart.line.uptrend.xyaxis",
+                description: "Lifetime ore earned across all sessions.",
+                detailLines: [
+                    "Unlocks new upgrades at thresholds.",
+                    "Tracks overall progression pace."
+                ]
+            )
         ]
     }
 
