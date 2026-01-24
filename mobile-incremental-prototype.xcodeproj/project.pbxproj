@@ -36,6 +36,7 @@
 		224008DD2F23AC9E004B9D68 /* ai_instructions.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = ai_instructions.md; sourceTree = "<group>"; };
 		224008DE2F23AC9E004B9D68 /* DESIGN.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = DESIGN.md; sourceTree = "<group>"; };
 		224008DF2F23AC9E004B9D68 /* PLAN_GAMEPLAY.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PLAN_GAMEPLAY.md; sourceTree = "<group>"; };
+		224009212F2582AD004B9D68 /* TrainHeaderAnimation_Spec.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = TrainHeaderAnimation_Spec.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -106,6 +107,7 @@
 		220EC9132F1D428000A32BFF /* docs */ = {
 			isa = PBXGroup;
 			children = (
+				224009212F2582AD004B9D68 /* TrainHeaderAnimation_Spec.md */,
 				220EC9142F1D429600A32BFF /* PLAN.md */,
 				224008DD2F23AC9E004B9D68 /* ai_instructions.md */,
 				224008DE2F23AC9E004B9D68 /* DESIGN.md */,
