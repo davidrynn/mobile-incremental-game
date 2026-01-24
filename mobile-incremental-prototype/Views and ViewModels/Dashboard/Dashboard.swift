@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct Dashboard: View {
-    @StateObject private var viewModel = DashboardViewModel(state: GameState())
+    @StateObject private var viewModel = DashboardViewModel(state: GameState(), hiddenState: HiddenState())
 
     var body: some View {
         NavigationStack {
@@ -103,10 +103,9 @@ struct Dashboard: View {
         let columns = Array(repeating: GridItem(.flexible(), spacing: 12), count: 4)
 
         return LazyVGrid(columns: columns, spacing: 12) {
-            statCard(title: "Ore", value: "\(viewModel.state.ore)", icon: "mountain.2.fill")
-            statCard(title: "Parts", value: "\(viewModel.state.parts)", icon: "gearshape.2.fill")
-            statCard(title: "Displays", value: "\(viewModel.state.displays)", icon: "photo.on.rectangle.angled")
-            statCard(title: "Total Ore", value: "\(viewModel.state.totalOreEarned)", icon: "chart.line.uptrend.xyaxis")
+            ForEach(viewModel.resources) { boost in
+                StatCard(viewModel: boost )
+            }
         }
     }
 
@@ -122,10 +121,9 @@ struct Dashboard: View {
             let columns = Array(repeating: GridItem(.flexible(), spacing: 12), count: 4)
 
             LazyVGrid(columns: columns, spacing: 12) {
-                statCard(title: "Base Yield", value: "\(baseYield)", icon: "bolt.fill")
-                statCard(title: "Release Rate", value: releaseRateText, icon: "gauge.with.dots.needle.bottom.50percent")
-                statCard(title: "Refine Boost", value: "x\(refineMultiplier)", icon: "wand.and.stars.inverse")
-                statCard(title: "Deliver Boost", value: "x\(deliverMultiplier)", icon: "shippingbox.fill")
+                ForEach(viewModel.boosts) { boost in
+                    StatCard(viewModel: boost )
+                }
             }
         }
         .padding()
@@ -253,26 +251,8 @@ struct Dashboard: View {
         .buttonStyle(.plain)
     }
 
-    private var baseYield: Int {
-        1 + viewModel.state.primaryYieldLevel
-    }
-
-    private var refineMultiplier: Int {
-        1 + viewModel.state.refinementCoilsLevel
-    }
-
-    private var deliverMultiplier: Int {
-        1 + viewModel.state.displayRigLevel
-    }
-
-    private var releaseRateText: String {
-        let threshold = max(1, 4 - viewModel.state.pressureValveLevel)
-        return "\(threshold)x"
-    }
-
-    
 }
 
 #Preview {
-    ContentView()
+    Dashboard()
 }

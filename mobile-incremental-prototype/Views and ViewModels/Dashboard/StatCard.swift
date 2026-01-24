@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct StatCard: View {
-    let viewModel: StatCardViewModel
+    var viewModel: StatCardViewModel
+    @State private var showPopover = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -21,9 +22,11 @@ struct StatCard: View {
                 .font(.title2)
                 .fontWeight(.semibold)
                 .foregroundStyle(.white)
-            Text(viewModel.title)
-                .font(.caption)
-                .foregroundStyle(.white.opacity(0.7))
+
+            // Optional subtitle/title line
+//            Text(viewModel.title)
+//                .font(.caption)
+//                .foregroundStyle(.white.opacity(0.7))
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -31,7 +34,22 @@ struct StatCard: View {
             .white.opacity(0.12),
             in: RoundedRectangle(cornerRadius: 16, style: .continuous)
         )
-        // Add popover or other interactions here when the related state and content are ready.
+        .onTapGesture {
+            showPopover = true
+        }
+        .popover(isPresented: $showPopover, attachmentAnchor: .rect(.bounds), arrowEdge: .top) {
+            // Your “bubble” content
+            VStack(alignment: .leading, spacing: 8) {
+                Text(viewModel.title)
+                    .font(.headline)
+                Text(viewModel.value)
+                    .font(.subheadline)
+                Button("Dismiss") { showPopover = false }
+                    .buttonStyle(.borderedProminent)
+            }
+            .padding()
+            .presentationCompactAdaptation(.popover) // helps keep popover style when possible
+        }
     }
 }
 

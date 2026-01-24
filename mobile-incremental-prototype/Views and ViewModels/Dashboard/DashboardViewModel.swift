@@ -17,6 +17,44 @@ final class DashboardViewModel: ObservableObject {
         self.state = state
         self.hiddenState = hiddenState
     }
+    
+    private var baseYield: Int {
+        1 + state.primaryYieldLevel
+    }
+
+    private var refineMultiplier: Int {
+        1 + state.refinementCoilsLevel
+    }
+
+    private var deliverMultiplier: Int {
+        1 + state.displayRigLevel
+    }
+
+    private var releaseRateText: String {
+        let threshold = max(1, 4 - state.pressureValveLevel)
+        if threshold <= 1 {
+            return "Instant"
+        }
+        return "Every \(threshold)x"
+    }
+    
+    var boosts: [StatCardViewModel] {
+        [
+            StatCardViewModel(title: "Base Yield", value: "\(baseYield)", icon: "bolt.fill"),
+            StatCardViewModel(title: "Release Rate", value: releaseRateText, icon: "gauge.with.dots.needle.bottom.50percent"),
+            StatCardViewModel(title: "Refine Boost", value: "x\(refineMultiplier)", icon: "wand.and.stars.inverse"),
+            StatCardViewModel(title: "Deliver Boost", value: "x\(deliverMultiplier)", icon: "shippingbox.fill")
+        ]
+    }
+    
+    var resources: [StatCardViewModel] {
+        [
+            StatCardViewModel(title: "Ore", value: "\(state.ore)", icon: "mountain.2.fill"),
+            StatCardViewModel(title: "Parts", value: "\(state.parts)", icon: "gearshape.2.fill"),
+            StatCardViewModel(title: "Displays", value: "\(state.displays)", icon: "photo.on.rectangle.angled"),
+            StatCardViewModel(title: "Total Ore", value: "\(state.totalOreEarned)", icon: "chart.line.uptrend.xyaxis")
+        ]
+    }
 
     var resourceText: String {
         "Ore: \(state.ore)"

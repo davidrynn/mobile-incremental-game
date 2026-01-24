@@ -140,5 +140,5 @@ struct UpgradesView: View {
 }
 
 #Preview {
-    UpgradesView(viewModel: DashboardViewModel(state: GameState()))
+    UpgradesView(viewModel: DashboardViewModel(state: GameState(), hiddenState: HiddenState()))
 }
