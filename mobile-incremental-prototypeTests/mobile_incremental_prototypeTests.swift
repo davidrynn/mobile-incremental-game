@@ -125,7 +125,7 @@ struct mobile_incremental_prototypeTests {
         #expect(updatedHiddenState.pressure == 0)
     }
 
-    @Test @MainActor func upgradeViewStateShowsLockedAndRequirement() {
+    @Test @MainActor func upgradeViewStateShowsLockedAndRequirement() throws {
         let viewModel = GameViewModel(state: GameState(resource: 0, primaryYieldLevel: 0, totalResourceEarned: 0))
 
         let upgrade = try #require(viewModel.upgrades.first)
@@ -135,7 +135,7 @@ struct mobile_incremental_prototypeTests {
         #expect(upgrade.canPurchase == false)
     }
 
-    @Test @MainActor func upgradeViewStateShowsCostWhenUnlocked() {
+    @Test @MainActor func upgradeViewStateShowsCostWhenUnlocked() throws {
         let viewModel = GameViewModel(state: GameState(resource: 20, primaryYieldLevel: 1, totalResourceEarned: 10))
 
         let upgrade = try #require(viewModel.upgrades.first)

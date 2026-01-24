@@ -9,6 +9,7 @@
 - Preserve a strong separation between engine logic and SwiftUI.
 - Maintain a tiny visible UI while allowing large internal state growth.
 - Optimize for discovery, surprise, and “why did that just happen?” moments.
+- Document prioritize order - ai_instructions, DESIGN, PLAN_GAMEPLAY, PLAN
 
 ---
 
