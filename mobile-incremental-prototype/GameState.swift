@@ -23,16 +23,27 @@ enum Phase: Equatable, Hashable {
 }
 
 struct GameState: Equatable, Sendable {
-    var resource: Int
+    var ore: Int
+    var parts: Int
+    var displays: Int
     var primaryYieldLevel: Int
     var pressureValveLevel: Int
-    var totalResourceEarned: Int
+    var totalOreEarned: Int
 
-    init(resource: Int = 0, primaryYieldLevel: Int = 0, pressureValveLevel: Int = 0, totalResourceEarned: Int = 0) {
-        self.resource = resource
+    init(
+        ore: Int = 0,
+        parts: Int = 0,
+        displays: Int = 0,
+        primaryYieldLevel: Int = 0,
+        pressureValveLevel: Int = 0,
+        totalOreEarned: Int = 0
+    ) {
+        self.ore = ore
+        self.parts = parts
+        self.displays = displays
         self.primaryYieldLevel = primaryYieldLevel
         self.pressureValveLevel = pressureValveLevel
-        self.totalResourceEarned = totalResourceEarned
+        self.totalOreEarned = totalOreEarned
     }
 }
 
@@ -45,10 +56,10 @@ struct HiddenState: Equatable, Sendable {
 }
 
 func phase(for state: GameState) -> Phase {
-    if state.totalResourceEarned >= deliverPhaseThreshold {
+    if state.totalOreEarned >= deliverPhaseThreshold {
         return .deliver
     }
-    if state.totalResourceEarned >= refinePhaseThreshold {
+    if state.totalOreEarned >= refinePhaseThreshold {
         return .refine
     }
     return .gather
@@ -83,8 +94,19 @@ func apply(action: ActionType, to state: GameState, hiddenState: HiddenState) ->
         nextHiddenState.pressure = nextHiddenState.pressure % releaseThreshold
 
         let yield = baseYield + (release * releaseMultiplier)
-        nextState.resource += yield
-        nextState.totalResourceEarned += yield
+        switch currentPhase {
+        case .gather:
+            nextState.ore += yield
+            nextState.totalOreEarned += yield
+        case .refine:
+            let convertible = min(nextState.ore, yield)
+            nextState.ore -= convertible
+            nextState.parts += convertible
+        case .deliver:
+            let convertible = min(nextState.parts, yield)
+            nextState.parts -= convertible
+            nextState.displays += convertible
+        }
     }
 
     return (nextState, nextHiddenState)
@@ -100,7 +122,7 @@ func upgradeUnlockThreshold(for upgrade: UpgradeType) -> Int {
 }
 
 func isUpgradeUnlocked(_ upgrade: UpgradeType, in state: GameState) -> Bool {
-    state.totalResourceEarned >= upgradeUnlockThreshold(for: upgrade)
+    state.totalOreEarned >= upgradeUnlockThreshold(for: upgrade)
 }
 
 func upgradeCost(for upgrade: UpgradeType, atLevel level: Int) -> Int {
@@ -121,22 +143,22 @@ func purchase(upgrade: UpgradeType, in state: GameState, hiddenState: HiddenStat
             return (nextState, hiddenState)
         }
         let cost = upgradeCost(for: upgrade, atLevel: nextState.primaryYieldLevel)
-        guard nextState.resource >= cost else {
+        guard nextState.parts >= cost else {
             return (nextState, hiddenState)
         }
 
-        nextState.resource -= cost
+        nextState.parts -= cost
         nextState.primaryYieldLevel += 1
     case .pressureValve:
         guard isUpgradeUnlocked(upgrade, in: nextState) else {
             return (nextState, hiddenState)
         }
         let cost = upgradeCost(for: upgrade, atLevel: nextState.pressureValveLevel)
-        guard nextState.resource >= cost else {
+        guard nextState.parts >= cost else {
             return (nextState, hiddenState)
         }
 
-        nextState.resource -= cost
+        nextState.parts -= cost
         nextState.pressureValveLevel += 1
     }
 

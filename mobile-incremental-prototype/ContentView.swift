@@ -61,8 +61,13 @@ struct ContentView: View {
     private var statsSection: some View {
         VStack(spacing: 16) {
             HStack(spacing: 16) {
-                statCard(title: "Resource", value: "\(viewModel.state.resource)", icon: "drop.fill")
-                statCard(title: "Total Earned", value: "\(viewModel.state.totalResourceEarned)", icon: "chart.line.uptrend.xyaxis")
+                statCard(title: "Ore", value: "\(viewModel.state.ore)", icon: "mountain.2.fill")
+                statCard(title: "Parts", value: "\(viewModel.state.parts)", icon: "gearshape.2.fill")
+            }
+
+            HStack(spacing: 16) {
+                statCard(title: "Displays", value: "\(viewModel.state.displays)", icon: "photo.on.rectangle.angled")
+                statCard(title: "Total Ore", value: "\(viewModel.state.totalOreEarned)", icon: "chart.line.uptrend.xyaxis")
             }
 
             HStack(spacing: 16) {
@@ -113,7 +118,7 @@ struct ContentView: View {
                             .fontWeight(.semibold)
                             .foregroundStyle(.white)
                         Spacer()
-                        Text("\(viewModel.state.totalResourceEarned)/\(upgradeUnlockThreshold(for: upgrade.id))")
+                        Text("\(viewModel.state.totalOreEarned)/\(upgradeUnlockThreshold(for: upgrade.id))")
                             .font(.caption)
                             .foregroundStyle(.white.opacity(0.7))
                     }
@@ -231,7 +236,7 @@ struct ContentView: View {
     private func milestoneProgress(for upgrade: UpgradeType) -> Double {
         let threshold = Double(upgradeUnlockThreshold(for: upgrade))
         guard threshold > 0 else { return 1 }
-        return min(Double(viewModel.state.totalResourceEarned) / threshold, 1)
+        return min(Double(viewModel.state.totalOreEarned) / threshold, 1)
     }
 
     private func statCard(title: String, value: String, icon: String) -> some View {
