@@ -14,4 +14,6 @@ struct StatCardViewModel: Identifiable, Equatable {
     let title: String
     let value: String
     let icon: String
+    let description: String
+    let detailLines: [String]
 }
