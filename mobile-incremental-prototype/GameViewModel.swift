@@ -19,11 +19,11 @@ final class GameViewModel: ObservableObject {
     }
 
     var resourceText: String {
-        "Resource: \(state.resource)"
+        "Ore: \(state.ore)"
     }
 
     var totalEarnedText: String {
-        "Total earned: \(state.totalResourceEarned)"
+        "Total ore: \(state.totalOreEarned)"
     }
 
     var currentPhase: Phase {
@@ -82,8 +82,8 @@ final class GameViewModel: ObservableObject {
                 level: level,
                 cost: cost,
                 isLocked: isLocked,
-                requirementText: isLocked ? "Unlock at \(upgradeUnlockThreshold(for: upgrade)) total earned" : nil,
-                canPurchase: !isLocked && state.resource >= cost
+                requirementText: isLocked ? "Unlock at \(upgradeUnlockThreshold(for: upgrade)) total ore" : nil,
+                canPurchase: !isLocked && state.parts >= cost
             )
         }
     }
@@ -101,11 +101,11 @@ final class GameViewModel: ObservableObject {
         let phaseHint: String
         switch currentPhase {
         case .gather:
-            phaseHint = "Gather pressure quickly to prime the release."
+            phaseHint = "Break ore quickly to prime the release."
         case .refine:
-            phaseHint = "Refining doubles the release output."
+            phaseHint = "Refining converts ore into parts."
         case .deliver:
-            phaseHint = "Delivery triples the release output."
+            phaseHint = "Delivering installs displays from parts."
         }
 
         if releaseThreshold <= 1 {

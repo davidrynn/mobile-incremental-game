@@ -11,38 +11,38 @@ import Testing
 struct mobile_incremental_prototypeTests {
 
     @Test func primaryTapIncreasesResourceByOne() {
-        let initialState = GameState(resource: 0)
+        let initialState = GameState(ore: 0)
         let initialHiddenState = HiddenState()
 
         let (updatedState, _) = apply(action: .primaryTap, to: initialState, hiddenState: initialHiddenState)
 
-        #expect(updatedState.resource == 1)
-        #expect(updatedState.totalResourceEarned == 1)
+        #expect(updatedState.ore == 1)
+        #expect(updatedState.totalOreEarned == 1)
     }
 
     @Test func applyingMultipleActionsAccumulatesResource() {
-        let initialState = GameState(resource: 2)
+        let initialState = GameState(ore: 2)
         let initialHiddenState = HiddenState()
 
         let (afterFirst, afterFirstHidden) = apply(action: .primaryTap, to: initialState, hiddenState: initialHiddenState)
         let (afterSecond, _) = apply(action: .primaryTap, to: afterFirst, hiddenState: afterFirstHidden)
 
-        #expect(afterSecond.resource == 4)
-        #expect(afterSecond.totalResourceEarned == 2)
+        #expect(afterSecond.ore == 4)
+        #expect(afterSecond.totalOreEarned == 2)
     }
 
     @Test func purchasingPrimaryYieldUpgradeConsumesResourceAndIncreasesYield() {
-        let initialState = GameState(resource: 12, primaryYieldLevel: 0, totalResourceEarned: 5)
+        let initialState = GameState(ore: 0, parts: 12, primaryYieldLevel: 0, totalOreEarned: 5)
         let initialHiddenState = HiddenState()
 
         let (updatedState, _) = purchase(upgrade: .primaryYield, in: initialState, hiddenState: initialHiddenState)
 
-        #expect(updatedState.resource == 2)
+        #expect(updatedState.parts == 2)
         #expect(updatedState.primaryYieldLevel == 1)
     }
 
     @Test func purchaseFailsWhenResourcesAreInsufficient() {
-        let initialState = GameState(resource: 5, primaryYieldLevel: 0, totalResourceEarned: 5)
+        let initialState = GameState(ore: 0, parts: 5, primaryYieldLevel: 0, totalOreEarned: 5)
         let initialHiddenState = HiddenState()
 
         let (updatedState, _) = purchase(upgrade: .primaryYield, in: initialState, hiddenState: initialHiddenState)
@@ -59,33 +59,33 @@ struct mobile_incremental_prototypeTests {
     }
 
     @Test func primaryTapUsesUpgradeLevelForYield() {
-        let initialState = GameState(resource: 0, primaryYieldLevel: 2, totalResourceEarned: 4)
+        let initialState = GameState(ore: 0, primaryYieldLevel: 2, totalOreEarned: 4)
         let initialHiddenState = HiddenState()
 
         let (updatedState, _) = apply(action: .primaryTap, to: initialState, hiddenState: initialHiddenState)
 
-        #expect(updatedState.resource == 3)
-        #expect(updatedState.totalResourceEarned == 7)
+        #expect(updatedState.ore == 3)
+        #expect(updatedState.totalOreEarned == 7)
     }
 
     @Test func upgradeUnlocksAfterEarningThreshold() {
-        let lockedState = GameState(resource: 10, primaryYieldLevel: 0, totalResourceEarned: 4)
+        let lockedState = GameState(ore: 10, primaryYieldLevel: 0, totalOreEarned: 4)
 
         #expect(isUpgradeUnlocked(.primaryYield, in: lockedState) == false)
 
-        let unlockedState = GameState(resource: 10, primaryYieldLevel: 0, totalResourceEarned: 5)
+        let unlockedState = GameState(ore: 10, primaryYieldLevel: 0, totalOreEarned: 5)
 
         #expect(isUpgradeUnlocked(.primaryYield, in: unlockedState) == true)
 
-        let pressureValveLocked = GameState(resource: 20, primaryYieldLevel: 0, totalResourceEarned: 14)
-        let pressureValveUnlocked = GameState(resource: 20, primaryYieldLevel: 0, totalResourceEarned: 15)
+        let pressureValveLocked = GameState(ore: 20, primaryYieldLevel: 0, totalOreEarned: 14)
+        let pressureValveUnlocked = GameState(ore: 20, primaryYieldLevel: 0, totalOreEarned: 15)
 
         #expect(isUpgradeUnlocked(.pressureValve, in: pressureValveLocked) == false)
         #expect(isUpgradeUnlocked(.pressureValve, in: pressureValveUnlocked) == true)
     }
 
     @Test func purchaseFailsWhenUpgradeIsLocked() {
-        let initialState = GameState(resource: 20, primaryYieldLevel: 0, totalResourceEarned: 4)
+        let initialState = GameState(ore: 0, parts: 20, primaryYieldLevel: 0, totalOreEarned: 4)
         let initialHiddenState = HiddenState()
 
         let (updatedState, _) = purchase(upgrade: .primaryYield, in: initialState, hiddenState: initialHiddenState)
@@ -94,20 +94,20 @@ struct mobile_incremental_prototypeTests {
     }
 
     @Test func pressureValveImprovesReleaseFrequency() {
-        let initialState = GameState(resource: 0, primaryYieldLevel: 0, pressureValveLevel: 1, totalResourceEarned: 0)
+        let initialState = GameState(ore: 0, primaryYieldLevel: 0, pressureValveLevel: 1, totalOreEarned: 0)
         let initialHiddenState = HiddenState(pressure: 2)
 
         let (updatedState, updatedHiddenState) = apply(action: .primaryTap, to: initialState, hiddenState: initialHiddenState)
 
-        #expect(updatedState.resource == 2)
-        #expect(updatedState.totalResourceEarned == 2)
+        #expect(updatedState.ore == 2)
+        #expect(updatedState.totalOreEarned == 2)
         #expect(updatedHiddenState.pressure == 0)
     }
 
     @Test func phaseTransitionsBasedOnTotalEarned() {
-        let gatherState = GameState(resource: 0, totalResourceEarned: 0)
-        let refineState = GameState(resource: 0, totalResourceEarned: 20)
-        let deliverState = GameState(resource: 0, totalResourceEarned: 60)
+        let gatherState = GameState(ore: 0, totalOreEarned: 0)
+        let refineState = GameState(ore: 0, totalOreEarned: 20)
+        let deliverState = GameState(ore: 0, totalOreEarned: 60)
 
         #expect(phase(for: gatherState) == .gather)
         #expect(phase(for: refineState) == .refine)
@@ -115,28 +115,40 @@ struct mobile_incremental_prototypeTests {
     }
 
     @Test func refinePhaseAmplifiesReleaseBursts() {
-        let refineState = GameState(resource: 0, primaryYieldLevel: 0, pressureValveLevel: 0, totalResourceEarned: 20)
+        let refineState = GameState(ore: 5, primaryYieldLevel: 0, pressureValveLevel: 0, totalOreEarned: 20)
         let initialHiddenState = HiddenState(pressure: 3)
 
         let (updatedState, updatedHiddenState) = apply(action: .primaryTap, to: refineState, hiddenState: initialHiddenState)
 
-        #expect(updatedState.resource == 3)
-        #expect(updatedState.totalResourceEarned == 23)
+        #expect(updatedState.ore == 2)
+        #expect(updatedState.parts == 3)
+        #expect(updatedState.totalOreEarned == 20)
+        #expect(updatedHiddenState.pressure == 0)
+    }
+
+    @Test func deliverPhaseConvertsPartsIntoDisplays() {
+        let deliverState = GameState(parts: 4, primaryYieldLevel: 0, pressureValveLevel: 0, totalOreEarned: 60)
+        let initialHiddenState = HiddenState(pressure: 3)
+
+        let (updatedState, updatedHiddenState) = apply(action: .primaryTap, to: deliverState, hiddenState: initialHiddenState)
+
+        #expect(updatedState.parts == 0)
+        #expect(updatedState.displays == 4)
         #expect(updatedHiddenState.pressure == 0)
     }
 
     @Test @MainActor func upgradeViewStateShowsLockedAndRequirement() throws {
-        let viewModel = GameViewModel(state: GameState(resource: 0, primaryYieldLevel: 0, totalResourceEarned: 0))
+        let viewModel = GameViewModel(state: GameState(ore: 0, primaryYieldLevel: 0, totalOreEarned: 0))
 
         let upgrade = try #require(viewModel.upgrades.first)
 
         #expect(upgrade.isLocked == true)
-        #expect(upgrade.requirementText == "Unlock at 5 total earned")
+        #expect(upgrade.requirementText == "Unlock at 5 total ore")
         #expect(upgrade.canPurchase == false)
     }
 
     @Test @MainActor func upgradeViewStateShowsCostWhenUnlocked() throws {
-        let viewModel = GameViewModel(state: GameState(resource: 20, primaryYieldLevel: 1, totalResourceEarned: 10))
+        let viewModel = GameViewModel(state: GameState(ore: 0, parts: 20, primaryYieldLevel: 1, totalOreEarned: 10))
 
         let upgrade = try #require(viewModel.upgrades.first)
 
