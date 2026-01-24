@@ -2,12 +2,12 @@
 
 ## Product vision (expanded)
 - Deliver a short, satisfying **active incremental** loop inspired by Digseum/Gnorp-style play.
-- Keep the surface interaction extremely small (initially one button, one upgrade).
+- Keep the surface interaction extremely small (initially one main action per phase screen, one upgrade).
 - Allow progression to *feel* mysterious, emergent, or chaotic while remaining deterministic and testable.
 - Embrace strange outcomes as long as progress trends upward over time.
 - Favor upgrades that change **how progress behaves**, not just how fast numbers increase.
 - Preserve a strong separation between engine logic and SwiftUI.
-- Maintain a tiny visible UI while allowing large internal state growth.
+- Maintain a tiny visible UI while allowing large internal state growth, with **separate phase screens** for clarity.
 - Optimize for discovery, surprise, and “why did that just happen?” moments.
 - Document prioritize order - ai_instructions, DESIGN, PLAN_GAMEPLAY, PLAN
 
@@ -25,6 +25,7 @@ This supports inspiration from Space Rock Breaker–style progression without si
 - Player taps the primary button.
 - A **force/action** is applied to the system.
 - Visible resources increase as a *result* of hidden state resolution.
+- Gathering should include a lightweight mini-game (timing, pattern, or streak) that introduces chance-based rewards.
 
 > Important: the visible increment does **not** need to map 1:1 to taps.
 
@@ -84,15 +85,15 @@ Avoid upgrades that are *only* flat +N unless they serve onboarding.
 
 ---
 
-## Phases (implicit, no UI)
-The game may naturally pass through phases without explicit presentation:
+## Phases (explicit screens)
+Phases should be explicit with their **own screens** and separated mechanics:
 
 - Phase 0: Linear, understandable growth
 - Phase 1: Bursts and stalls
 - Phase 2: Unpredictable but accelerating gains
 - Phase 3: Player intuition replaces clarity
 
-Phases emerge from upgrades, not hard switches.
+Phases emerge from upgrades, but should be represented with dedicated screens.
 
 ---
 
@@ -110,6 +111,7 @@ Phases emerge from upgrades, not hard switches.
   - Pure functions
   - Deterministic state transitions
   - Applies actions and upgrades
+  - Per-phase logic separated into dedicated modules/reducers
 
 - **Upgrades**:
   - Modify rules, not just values
@@ -122,14 +124,15 @@ Phases emerge from upgrades, not hard switches.
   - Ambient backdrop tied to progression phase
   - Small progress indicators (milestones, streaks, or charge meters)
   - Optional micro-animations on resource gain
+  - Dedicated screens per phase with their own mini-game elements
 
 ---
 
 ## Data model approach
 - All definitions via enums/structs.
 - GameState + HiddenState updated together.
-- No randomness.
-- All outcomes reproducible from initial state + action sequence.
+- Allow chance-based outcomes with guardrails (e.g., weighted rolls, pity timers).
+- Outcomes remain reproducible when seeded or deterministically simulated.
 
 ---
 

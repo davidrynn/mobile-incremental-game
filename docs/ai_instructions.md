@@ -38,7 +38,7 @@ If there is a conflict:
 - Do **not** build general-purpose architecture “just in case.”
 - Prefer visible player progress over internal correctness.
 - Favor behavioral upgrades over numeric-only upgrades.
-- Phases of play (gather → upgrade → display/deliver) must remain clear in effect, even if abstract in implementation.
+- Phases of play (gather → upgrade → display/deliver) must remain clear and use distinct screens.
 
 ---
 
@@ -48,13 +48,13 @@ The game may include:
 - Threshold-based behavior changes
 - Delayed or burst rewards
 - History-dependent outcomes
+- Chance-based outcomes with guardrails (weighted rolls, pity timers)
 
 The game may **not** include:
-- Random number generation
-- Non-deterministic logic
+- Unbounded RNG without safeguards
 - Player-visible penalties that permanently reduce progress
 
-All outcomes must be reproducible from state + input sequence.
+Outcomes should be reproducible when seeded or simulated deterministically.
 
 ---
 
@@ -99,4 +99,3 @@ If the answer is unclear, pause and ask for guidance.
 ---
 
 End of instructions.
-
