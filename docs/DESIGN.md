@@ -46,7 +46,7 @@ The game should have at least three phases. Each phase is a *mode* with its **ow
 - **Action:** Tap = Apply Force
 - **Output:** `Ore` (or `Rubble`)
 - **Hidden state:** pressure/stress/instability builds and resolves
-- **Chance/gameplay:** a lightweight gathering mini-game (timing window, streak meter, or pattern) with a chance-based bonus outcome
+- **Chance/gameplay:** a lightweight gathering mini-game (timing window, streak meter, or pattern) with a chance-based bonus outcome (cadence window streaks count)
 - **Goal:** first meaningful upgrade + first unlock
 
 ### Phase 1 — Upgrade / Process

@@ -33,6 +33,7 @@ struct GameState: Equatable, Sendable {
     var refinementCoilsLevel: Int
     var displayRigLevel: Int
     var totalOreEarned: Int
+    var gatherStreak: Int
 
     init(
         ore: Int = 0,
@@ -42,7 +43,8 @@ struct GameState: Equatable, Sendable {
         pressureValveLevel: Int = 0,
         refinementCoilsLevel: Int = 0,
         displayRigLevel: Int = 0,
-        totalOreEarned: Int = 0
+        totalOreEarned: Int = 0,
+        gatherStreak: Int = 0
     ) {
         self.ore = ore
         self.parts = parts
@@ -52,14 +54,17 @@ struct GameState: Equatable, Sendable {
         self.refinementCoilsLevel = refinementCoilsLevel
         self.displayRigLevel = displayRigLevel
         self.totalOreEarned = totalOreEarned
+        self.gatherStreak = gatherStreak
     }
 }
 
 struct HiddenState: Equatable, Sendable {
     var pressure: Int
+    var cadenceStep: Int
 
-    init(pressure: Int = 0) {
+    init(pressure: Int = 0, cadenceStep: Int = 0) {
         self.pressure = pressure
+        self.cadenceStep = cadenceStep
     }
 }
 
@@ -82,6 +87,8 @@ func apply(action: ActionType, to state: GameState, hiddenState: HiddenState) ->
         let currentPhase = phase(for: nextState)
         let baseYield = 1 + nextState.primaryYieldLevel
         let releaseThreshold = max(1, 4 - nextState.pressureValveLevel)
+        let cadenceCycle = 4
+        let cadenceSweetSpot = cadenceCycle - 1
 
         let pressureGain: Int
         let releaseMultiplier: Int
@@ -101,7 +108,22 @@ func apply(action: ActionType, to state: GameState, hiddenState: HiddenState) ->
         let release = nextHiddenState.pressure / releaseThreshold
         nextHiddenState.pressure = nextHiddenState.pressure % releaseThreshold
 
-        let yield = baseYield + (release * releaseMultiplier)
+        var cadenceBonus = 0
+        if currentPhase == .gather {
+            let isSweetSpot = nextHiddenState.cadenceStep == cadenceSweetSpot
+            if isSweetSpot {
+                nextState.gatherStreak += 1
+                cadenceBonus = nextState.gatherStreak
+            } else {
+                nextState.gatherStreak = 0
+            }
+            nextHiddenState.cadenceStep = (nextHiddenState.cadenceStep + 1) % cadenceCycle
+        } else {
+            nextState.gatherStreak = 0
+            nextHiddenState.cadenceStep = 0
+        }
+
+        let yield = baseYield + (release * releaseMultiplier) + cadenceBonus
         switch currentPhase {
         case .gather:
             nextState.ore += yield

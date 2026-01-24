@@ -106,6 +106,39 @@ struct mobile_incremental_prototypeTests {
         #expect(updatedHiddenState.pressure == 0)
     }
 
+    @Test func gatherCadenceSweetSpotAddsStreakBonus() {
+        let initialState = GameState(ore: 0, totalOreEarned: 0, gatherStreak: 0)
+        let initialHiddenState = HiddenState(pressure: 0, cadenceStep: 3)
+
+        let (updatedState, updatedHiddenState) = apply(action: .primaryTap, to: initialState, hiddenState: initialHiddenState)
+
+        #expect(updatedState.ore == 2)
+        #expect(updatedState.totalOreEarned == 2)
+        #expect(updatedState.gatherStreak == 1)
+        #expect(updatedHiddenState.cadenceStep == 0)
+    }
+
+    @Test func gatherCadenceMissResetsStreak() {
+        let initialState = GameState(ore: 0, totalOreEarned: 0, gatherStreak: 2)
+        let initialHiddenState = HiddenState(pressure: 0, cadenceStep: 1)
+
+        let (updatedState, updatedHiddenState) = apply(action: .primaryTap, to: initialState, hiddenState: initialHiddenState)
+
+        #expect(updatedState.ore == 1)
+        #expect(updatedState.gatherStreak == 0)
+        #expect(updatedHiddenState.cadenceStep == 2)
+    }
+
+    @Test func cadenceResetsOutsideGatherPhase() {
+        let refineState = GameState(ore: 4, totalOreEarned: 20, gatherStreak: 2)
+        let initialHiddenState = HiddenState(pressure: 0, cadenceStep: 2)
+
+        let (updatedState, updatedHiddenState) = apply(action: .primaryTap, to: refineState, hiddenState: initialHiddenState)
+
+        #expect(updatedState.gatherStreak == 0)
+        #expect(updatedHiddenState.cadenceStep == 0)
+    }
+
     @Test func phaseTransitionsBasedOnTotalEarned() {
         let gatherState = GameState(ore: 0, totalOreEarned: 0)
         let refineState = GameState(ore: 0, totalOreEarned: 20)
