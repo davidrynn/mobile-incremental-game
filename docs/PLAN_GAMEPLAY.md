@@ -28,7 +28,7 @@
   - Dedicated phase screens (phase label + main action + resource display)
   - Upgrade list view (disabled state when unaffordable/locked)
   - Artifact/progression track (e.g., displays/cargo/castle tier)
-  - Gathering mini-game surface (timing/pattern/streak) in the gather phase screen
+  - Gathering mini-game surface (cadence timing/streak window) in the gather phase screen
 
 ## TDD strategy (gameplay-first)
 - Unit tests for engine logic:
@@ -48,6 +48,7 @@
 7. [ ] **Phases MVP (tests first)**
    - Add `Phase` enum and route behavior by phase.
    - Minimal UI: dedicated screens per phase with phase label + action changes.
+   - Add cadence window streak mini-game in Phase 0.
 8. [ ] **Add resources + conversions (tests first)**
    - Implement `Ore → Parts` conversion in Phase 1.
    - Implement `Parts → Displays` progress in Phase 2.

@@ -30,6 +30,10 @@ final class GameViewModel: ObservableObject {
         phase(for: state)
     }
 
+    var isGatherPhase: Bool {
+        currentPhase == .gather
+    }
+
     var phaseText: String {
         switch currentPhase {
         case .gather:
@@ -118,6 +122,24 @@ final class GameViewModel: ObservableObject {
         return "\(phaseHint) Release every \(releaseThreshold) pressure."
     }
 
+    var cadenceProgress: Double {
+        let cycle = cadenceCycle
+        guard cycle > 0 else { return 1 }
+        return min(Double(hiddenState.cadenceStep) / Double(cycle), 1)
+    }
+
+    var cadenceStatusText: String {
+        "Cadence \(hiddenState.cadenceStep + 1)/\(cadenceCycle)"
+    }
+
+    var cadenceHintText: String {
+        "Hit the sweet spot to grow a streak bonus."
+    }
+
+    var streakText: String {
+        "Streak \(state.gatherStreak)"
+    }
+
     func tapPrimaryAction() {
         let result = apply(action: .primaryTap, to: state, hiddenState: hiddenState)
         state = result.state
@@ -132,6 +154,10 @@ final class GameViewModel: ObservableObject {
 
     private var releaseThreshold: Int {
         max(1, 4 - state.pressureValveLevel)
+    }
+
+    private var cadenceCycle: Int {
+        4
     }
 }
 

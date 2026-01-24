@@ -25,6 +25,7 @@ struct ContentView: View {
                         headerSection
                         statsSection
                         actionSection
+                        cadenceSection
                         pressureSection
                         workshopSection
                     }
@@ -135,6 +136,40 @@ struct ContentView: View {
         }
         .padding()
         .background(.white.opacity(0.1), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+    }
+
+    @ViewBuilder
+    private var cadenceSection: some View {
+        if viewModel.isGatherPhase {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack {
+                    Text("Cadence Window")
+                        .font(.headline)
+                        .foregroundStyle(.white)
+
+                    Spacer()
+
+                    Text(viewModel.cadenceStatusText)
+                        .font(.caption)
+                        .foregroundStyle(.white.opacity(0.7))
+                }
+
+                ProgressView(value: viewModel.cadenceProgress)
+                    .tint(Color(red: 0.68, green: 0.88, blue: 0.62))
+
+                HStack {
+                    Text(viewModel.cadenceHintText)
+                        .font(.caption)
+                        .foregroundStyle(.white.opacity(0.6))
+                    Spacer()
+                    Text(viewModel.streakText)
+                        .font(.caption)
+                        .foregroundStyle(.white.opacity(0.7))
+                }
+            }
+            .padding()
+            .background(.white.opacity(0.1), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        }
     }
 
     private var workshopSection: some View {
