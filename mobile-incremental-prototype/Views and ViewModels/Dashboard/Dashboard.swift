@@ -22,6 +22,7 @@ struct Dashboard: View {
 
                 VStack(spacing: 12) {
                     headerSection
+                    phaseSwitcherSection
                     engineAnimationSection
                     phaseContent
                     workshopSection
@@ -89,6 +90,7 @@ struct Dashboard: View {
         VStack(spacing: 20) {
             resourceSection
             actionSection
+            objectiveSection
             cadenceSection
             pressureSection
             Spacer(minLength: 0)
@@ -99,6 +101,7 @@ struct Dashboard: View {
         VStack(spacing: 20) {
             resourceSection
             actionSection
+            objectiveSection
             pressureSection
             boostSection
             Spacer(minLength: 0)
@@ -109,6 +112,7 @@ struct Dashboard: View {
         VStack(spacing: 20) {
             resourceSection
             actionSection
+            objectiveSection
             pressureSection
             boostSection
             Spacer(minLength: 0)
@@ -171,6 +175,72 @@ struct Dashboard: View {
         }
         .padding()
         .background(.white.opacity(0.12), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+    }
+
+    private var phaseSwitcherSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Operations")
+                .font(.headline)
+                .foregroundStyle(.white)
+
+            HStack(spacing: 8) {
+                ForEach(Phase.allCases, id: \.self) { phase in
+                    let isUnlocked = isPhaseUnlocked(phase)
+                    Button {
+                        viewModel.selectPhase(phase)
+                    } label: {
+                        VStack(spacing: 4) {
+                            Text(phase.title)
+                                .font(.caption)
+                                .fontWeight(.semibold)
+                            Text(phase.subtitle)
+                                .font(.caption2)
+                                .foregroundStyle(.white.opacity(0.7))
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 8)
+                        .background(
+                            viewModel.currentPhase == phase
+                                ? Color(red: 0.98, green: 0.62, blue: 0.28)
+                                : .white.opacity(0.12),
+                            in: RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        )
+                        .foregroundStyle(isUnlocked ? .white : .white.opacity(0.5))
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(!isUnlocked)
+                    .opacity(isUnlocked ? 1 : 0.6)
+                }
+            }
+        }
+        .padding()
+        .background(.white.opacity(0.1), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+    }
+
+    @ViewBuilder
+    private var objectiveSection: some View {
+        if let objective = viewModel.nextObjective {
+            VStack(alignment: .leading, spacing: 10) {
+                HStack {
+                    Text(objective.title)
+                        .font(.headline)
+                        .foregroundStyle(.white)
+                    Spacer()
+                    Text(objective.progressText)
+                        .font(.caption)
+                        .foregroundStyle(.white.opacity(0.7))
+                }
+
+                Text(objective.detail)
+                    .font(.caption)
+                    .foregroundStyle(.white.opacity(0.6))
+
+                ProgressView(value: objective.progress)
+                    .tint(Color(red: 0.57, green: 0.77, blue: 0.95))
+            }
+            .padding()
+            .background(.white.opacity(0.1), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        }
     }
 
     private var pressureSection: some View {
@@ -267,8 +337,36 @@ struct Dashboard: View {
         .buttonStyle(.plain)
     }
 
+    private func isPhaseUnlocked(_ phase: Phase) -> Bool {
+        isPhaseUnlocked(phase, in: viewModel.state)
+    }
+
 }
 
 #Preview {
     Dashboard()
+}
+
+private extension Phase {
+    var title: String {
+        switch self {
+        case .gather:
+            return "Break"
+        case .refine:
+            return "Refine"
+        case .deliver:
+            return "Deliver"
+        }
+    }
+
+    var subtitle: String {
+        switch self {
+        case .gather:
+            return "Ore"
+        case .refine:
+            return "Parts"
+        case .deliver:
+            return "Displays"
+        }
+    }
 }

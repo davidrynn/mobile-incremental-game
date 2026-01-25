@@ -21,6 +21,7 @@ struct UpgradesView: View {
 
             ScrollView {
                 VStack(spacing: 24) {
+                    phaseMilestonesSection
                     milestoneSection
                     upgradesSection
                 }
@@ -67,6 +68,28 @@ struct UpgradesView: View {
                 .padding(12)
                 .background(.white.opacity(0.1), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
             }
+        }
+    }
+
+    private var phaseMilestonesSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Phase Unlocks")
+                .font(.headline)
+                .foregroundStyle(.white)
+
+            phaseUnlockCard(
+                title: "Refine",
+                progress: progress(current: viewModel.state.totalOreEarned, threshold: refinePhaseThreshold),
+                progressText: "\(viewModel.state.totalOreEarned)/\(refinePhaseThreshold) ore",
+                detail: "Break ore to power the refiner."
+            )
+
+            phaseUnlockCard(
+                title: "Deliver",
+                progress: progress(current: viewModel.state.totalPartsEarned, threshold: deliverPhaseThreshold),
+                progressText: "\(viewModel.state.totalPartsEarned)/\(deliverPhaseThreshold) parts",
+                detail: "Refine ore into parts to open the bay."
+            )
         }
     }
 
@@ -136,6 +159,33 @@ struct UpgradesView: View {
         let threshold = Double(upgradeUnlockThreshold(for: upgrade))
         guard threshold > 0 else { return 1 }
         return min(Double(viewModel.state.totalOreEarned) / threshold, 1)
+    }
+
+    private func progress(current: Int, threshold: Int) -> Double {
+        guard threshold > 0 else { return 1 }
+        return min(Double(current) / Double(threshold), 1)
+    }
+
+    private func phaseUnlockCard(title: String, progress: Double, progressText: String, detail: String) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack {
+                Text(title)
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.white)
+                Spacer()
+                Text(progressText)
+                    .font(.caption)
+                    .foregroundStyle(.white.opacity(0.7))
+            }
+            Text(detail)
+                .font(.caption2)
+                .foregroundStyle(.white.opacity(0.6))
+            ProgressView(value: progress)
+                .tint(Color(red: 0.57, green: 0.77, blue: 0.95))
+        }
+        .padding(12)
+        .background(.white.opacity(0.1), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
     }
 }
 

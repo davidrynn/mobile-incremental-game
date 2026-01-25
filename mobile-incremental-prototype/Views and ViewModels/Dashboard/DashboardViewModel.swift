@@ -137,11 +137,38 @@ final class DashboardViewModel: ObservableObject {
     }
 
     var currentPhase: Phase {
-        phase(for: state)
+        resolvedPhase(for: state)
     }
 
     var isGatherPhase: Bool {
         currentPhase == .gather
+    }
+
+    var nextObjective: ObjectiveViewState? {
+        if !isPhaseUnlocked(.refine, in: state) {
+            return ObjectiveViewState(
+                title: "Unlock Refine",
+                detail: "Reach \(refinePhaseThreshold) total ore to power the refiner.",
+                progressText: "\(state.totalOreEarned)/\(refinePhaseThreshold) ore",
+                progress: progress(current: state.totalOreEarned, threshold: refinePhaseThreshold)
+            )
+        }
+
+        if !isPhaseUnlocked(.deliver, in: state) {
+            return ObjectiveViewState(
+                title: "Unlock Deliver",
+                detail: "Produce \(deliverPhaseThreshold) total parts to open the delivery bay.",
+                progressText: "\(state.totalPartsEarned)/\(deliverPhaseThreshold) parts",
+                progress: progress(current: state.totalPartsEarned, threshold: deliverPhaseThreshold)
+            )
+        }
+
+        return ObjectiveViewState(
+            title: "All Systems Online",
+            detail: "Cycle phases to keep production balanced.",
+            progressText: "All phases unlocked",
+            progress: 1
+        )
     }
 
     var phaseText: String {
@@ -256,6 +283,11 @@ final class DashboardViewModel: ObservableObject {
         hiddenState = result.hiddenState
     }
 
+    func selectPhase(_ phase: Phase) {
+        guard isPhaseUnlocked(phase, in: state) else { return }
+        state.currentPhase = phase
+    }
+
     func purchaseUpgrade(_ upgrade: UpgradeType) {
         let result = purchase(upgrade: upgrade, in: state, hiddenState: hiddenState)
         state = result.state
@@ -269,6 +301,11 @@ final class DashboardViewModel: ObservableObject {
     private var cadenceCycle: Int {
         4
     }
+
+    private func progress(current: Int, threshold: Int) -> Double {
+        guard threshold > 0 else { return 1 }
+        return min(Double(current) / Double(threshold), 1)
+    }
 }
 
 struct UpgradeViewState: Identifiable {
@@ -279,6 +316,14 @@ struct UpgradeViewState: Identifiable {
     let isLocked: Bool
     let requirementText: String?
     let canPurchase: Bool
+}
+
+struct ObjectiveViewState: Identifiable {
+    let id = UUID()
+    let title: String
+    let detail: String
+    let progressText: String
+    let progress: Double
 }
 
 private extension UpgradeType {
