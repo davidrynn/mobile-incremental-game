@@ -20,8 +20,9 @@ struct Dashboard: View {
                 )
                 .ignoresSafeArea()
 
-                VStack(spacing: 24) {
+                VStack(spacing: 12) {
                     headerSection
+                    engineAnimationSection
                     phaseContent
                     workshopSection
                 }
@@ -54,6 +55,21 @@ struct Dashboard: View {
             }
 
             Spacer()
+        }
+    }
+    // Placeholder view as an example
+    private var engineAnimationSection: some View {
+        GeometryReader { geometry in
+            let width = geometry.size.width
+            let height = geometry.size.height * 0.2
+            ZStack(alignment: .topLeading) {
+                ForEach(0..<viewModel.currentPhase.rawValue, id: \.self) { _ in
+                    Image(systemName: "engine.combustion")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: width, height: height)
+                }
+            }
         }
     }
 

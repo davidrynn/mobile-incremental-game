@@ -18,10 +18,10 @@ enum UpgradeType: Equatable, Hashable, CaseIterable {
     case displayRig
 }
 
-enum Phase: Equatable, Hashable {
-    case gather
-    case refine
-    case deliver
+enum Phase: Int, Equatable {
+    case gather = 0
+    case refine = 1
+    case deliver = 2
 }
 
 struct GameState: Equatable, Sendable {
