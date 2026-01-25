@@ -78,10 +78,20 @@
 6. [x] **Upgrade UI list**
    - List of upgrades with affordability/locked states.
    - Acceptance: purchasing upgrades updates state and UI.
-7. [ ] **Visual elements pass**
+7. [x] **Phase progression + conversions**
+   - Add Phase enum and routing for gather/refine/deliver.
+   - Implement Ore → Parts and Parts → Displays conversions.
+   - Add phase unlock thresholds.
+8. [x] **Hidden state + controlled chaos**
+   - Add pressure release cycles and cadence streak bonuses.
+   - Add targeted tests for pressure release and cadence behavior.
+9. [x] **Behavioral upgrades**
+   - Add upgrades that modify tap yield, pressure release, and conversions.
+10. [ ] **Visual elements pass**
    - Add minimal progress indicator to main view.
    - Add button feedback (scale/glow/press).
    - Add subtle background/ambient shift tied to progression.
+   - Phase dashboard already includes cadence/pressure indicators and a gradient background; button feedback still needed.
 
 ## Acceptance criteria per milestone
 - [x] **M1:** Xcode project builds, tests pass.
