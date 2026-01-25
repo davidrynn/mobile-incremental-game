@@ -20,14 +20,16 @@ struct Dashboard: View {
                 )
                 .ignoresSafeArea()
 
-                VStack(spacing: 12) {
-                    headerSection
-                    phaseSwitcherSection
-                    engineAnimationSection
-                    phaseContent
-                    workshopSection
+                ScrollView {
+                    VStack(spacing: 12) {
+                        headerSection
+                        phaseSwitcherSection
+                        engineAnimationSection
+                        phaseContent
+                        workshopSection
+                    }
+                    .padding()
                 }
-                .padding()
             }
             .navigationTitle("Steamworks")
             .navigationBarTitleDisplayMode(.inline)

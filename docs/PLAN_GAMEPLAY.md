@@ -45,20 +45,20 @@
 4. [x] **Unlocks/soft gating (tests first)**
 5. [x] **SwiftUI binding layer**
 6. [x] **Upgrade UI list**
-7. [ ] **Phases MVP (tests first)**
-   - Add `Phase` enum and route behavior by phase.
-   - Minimal UI: dedicated screens per phase with phase label + action changes.
-   - Add cadence window streak mini-game in Phase 0.
-8. [ ] **Add resources + conversions (tests first)**
-   - Implement `Ore → Parts` conversion in Phase 1.
-   - Implement `Parts → Displays` progress in Phase 2.
-9. [ ] **Controlled chaos pattern (tests first)**
-   - Implement threshold snap OR delayed payout.
-   - Add long-run monotonic growth test.
-10. [ ] **Behavioral upgrades (tests first)**
-   - Add 3 upgrades: one for breaking behavior, one for conversion, one for meta progression.
+7. [x] **Phases MVP (tests first)**
+    - Add `Phase` enum and route behavior by phase.
+    - Minimal UI: dedicated screens per phase with phase label + action changes.
+    - Add cadence window streak mini-game in Phase 0.
+8. [x] **Add resources + conversions (tests first)**
+    - Implement `Ore → Parts` conversion in Phase 1.
+    - Implement `Parts → Displays` progress in Phase 2.
+9. [x] **Controlled chaos pattern (tests first)**
+    - Implement pressure release cycles and cadence bonuses.
+    - Add tests for cadence and pressure behavior.
+10. [x] **Behavioral upgrades (tests first)**
+    - Add upgrades that change tap yield, pressure release cadence, and conversion multipliers.
 11. [ ] **Balancing pass (light)**
-   - Tune thresholds so Phase 1 happens within ~60s and Phase 2 within ~3–5 min.
+    - Tune thresholds so Phase 1 happens within ~60s and Phase 2 within ~3–5 min.
 
 ## Approval gates
 After each milestone step, stop and request approval before continuing.

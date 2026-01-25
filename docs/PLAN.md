@@ -155,17 +155,19 @@ Phases emerge from upgrades, but should be represented with dedicated screens.
 4. [x] Unlocks / soft gating
 5. [x] SwiftUI binding layer
 6. [x] Upgrade UI list
-7. [ ] **Hidden state introduction**
+7. [x] **Hidden state introduction**
    - Add HiddenState struct
    - Modify action resolution
-8. [ ] **Behavioral upgrade**
+8. [x] **Behavioral upgrade**
    - One upgrade that changes progression behavior
-9. [ ] **Controlled chaos pass**
-   - Validate long-term growth via tests
+9. [x] **Controlled chaos pass**
+   - Add cadence sweet-spot bonuses and pressure release cycles
+   - Add targeted tests for pressure release and cadence behavior
 10. [ ] **Visual elements pass**
-   - Add a minimal progress indicator
-   - Add button feedback (scale/glow/press)
-   - Add subtle background/ambient shift tied to progression
+    - Add a minimal progress indicator
+    - Add button feedback (scale/glow/press)
+    - Add subtle background/ambient shift tied to progression
+    - Phase dashboards now include cadence/pressure indicators and a gradient background; button feedback still needed
 
 ---
 

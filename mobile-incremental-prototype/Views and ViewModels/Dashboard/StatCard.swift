@@ -48,7 +48,7 @@ struct StatCard: View {
                     .font(.subheadline)
 
                 if !viewModel.detailLines.isEmpty {
-                    VStack(alignment: .leading, spacing: 6) {
+                    VStack(alignment: .leading, spacing: 0) {
                         Text("Details")
                             .font(.caption)
                             .foregroundStyle(.secondary)
