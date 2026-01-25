@@ -18,7 +18,7 @@ enum UpgradeType: Equatable, Hashable, CaseIterable {
     case displayRig
 }
 
-enum Phase: Int, Equatable {
+enum Phase: Int, Equatable, CaseIterable {
     case gather = 0
     case refine = 1
     case deliver = 2
@@ -28,33 +28,42 @@ struct GameState: Equatable, Sendable {
     var ore: Int
     var parts: Int
     var displays: Int
+    var totalPartsEarned: Int
+    var totalDisplaysEarned: Int
     var primaryYieldLevel: Int
     var pressureValveLevel: Int
     var refinementCoilsLevel: Int
     var displayRigLevel: Int
     var totalOreEarned: Int
     var gatherStreak: Int
+    var currentPhase: Phase
 
     init(
         ore: Int = 0,
         parts: Int = 0,
         displays: Int = 0,
+        totalPartsEarned: Int = 0,
+        totalDisplaysEarned: Int = 0,
         primaryYieldLevel: Int = 0,
         pressureValveLevel: Int = 0,
         refinementCoilsLevel: Int = 0,
         displayRigLevel: Int = 0,
         totalOreEarned: Int = 0,
-        gatherStreak: Int = 0
+        gatherStreak: Int = 0,
+        currentPhase: Phase = .gather
     ) {
         self.ore = ore
         self.parts = parts
         self.displays = displays
+        self.totalPartsEarned = totalPartsEarned
+        self.totalDisplaysEarned = totalDisplaysEarned
         self.primaryYieldLevel = primaryYieldLevel
         self.pressureValveLevel = pressureValveLevel
         self.refinementCoilsLevel = refinementCoilsLevel
         self.displayRigLevel = displayRigLevel
         self.totalOreEarned = totalOreEarned
         self.gatherStreak = gatherStreak
+        self.currentPhase = currentPhase
     }
 }
 
@@ -69,13 +78,31 @@ struct HiddenState: Equatable, Sendable {
 }
 
 func phase(for state: GameState) -> Phase {
-    if state.totalOreEarned >= deliverPhaseThreshold {
+    if isPhaseUnlocked(.deliver, in: state) {
         return .deliver
     }
-    if state.totalOreEarned >= refinePhaseThreshold {
+    if isPhaseUnlocked(.refine, in: state) {
         return .refine
     }
     return .gather
+}
+
+func isPhaseUnlocked(_ phase: Phase, in state: GameState) -> Bool {
+    switch phase {
+    case .gather:
+        return true
+    case .refine:
+        return state.totalOreEarned >= refinePhaseThreshold
+    case .deliver:
+        return state.totalPartsEarned >= deliverPhaseThreshold
+    }
+}
+
+func resolvedPhase(for state: GameState) -> Phase {
+    if isPhaseUnlocked(state.currentPhase, in: state) {
+        return state.currentPhase
+    }
+    return phase(for: state)
 }
 
 func apply(action: ActionType, to state: GameState, hiddenState: HiddenState) -> (state: GameState, hiddenState: HiddenState) {
@@ -84,7 +111,8 @@ func apply(action: ActionType, to state: GameState, hiddenState: HiddenState) ->
 
     switch action {
     case .primaryTap:
-        let currentPhase = phase(for: nextState)
+        let currentPhase = resolvedPhase(for: nextState)
+        nextState.currentPhase = currentPhase
         let baseYield = 1 + nextState.primaryYieldLevel
         let releaseThreshold = max(1, 4 - nextState.pressureValveLevel)
         let cadenceCycle = 4
@@ -133,11 +161,13 @@ func apply(action: ActionType, to state: GameState, hiddenState: HiddenState) ->
             let convertible = min(nextState.ore, yield * refinementMultiplier)
             nextState.ore -= convertible
             nextState.parts += convertible
+            nextState.totalPartsEarned += convertible
         case .deliver:
             let displayMultiplier = 1 + nextState.displayRigLevel
             let convertible = min(nextState.parts, yield * displayMultiplier)
             nextState.parts -= convertible
             nextState.displays += convertible
+            nextState.totalDisplaysEarned += convertible
         }
     }
 
@@ -147,13 +177,13 @@ func apply(action: ActionType, to state: GameState, hiddenState: HiddenState) ->
 func upgradeUnlockThreshold(for upgrade: UpgradeType) -> Int {
     switch upgrade {
     case .primaryYield:
-        return 5
-    case .pressureValve:
         return 15
-    case .refinementCoils:
-        return 30
-    case .displayRig:
+    case .pressureValve:
         return 45
+    case .refinementCoils:
+        return 90
+    case .displayRig:
+        return 140
     }
 }
 
@@ -164,13 +194,13 @@ func isUpgradeUnlocked(_ upgrade: UpgradeType, in state: GameState) -> Bool {
 func upgradeCost(for upgrade: UpgradeType, atLevel level: Int) -> Int {
     switch upgrade {
     case .primaryYield:
-        return 10 * (level + 1)
+        return 15 * (level + 1)
     case .pressureValve:
-        return 25 * (level + 1)
+        return 30 * (level + 1)
     case .refinementCoils:
-        return 40 * (level + 1)
+        return 50 * (level + 1)
     case .displayRig:
-        return 55 * (level + 1)
+        return 70 * (level + 1)
     }
 }
 
@@ -227,5 +257,5 @@ func purchase(upgrade: UpgradeType, in state: GameState, hiddenState: HiddenStat
     return (nextState, hiddenState)
 }
 
-private let refinePhaseThreshold = 20
-private let deliverPhaseThreshold = 60
+let refinePhaseThreshold = 60
+let deliverPhaseThreshold = 40
