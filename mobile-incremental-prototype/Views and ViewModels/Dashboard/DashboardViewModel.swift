@@ -137,7 +137,7 @@ final class DashboardViewModel: ObservableObject {
     }
 
     var currentPhase: Phase {
-        resolvedPhase(for: state)
+        GameState.resolvedPhase(for: state)
     }
 
     var isGatherPhase: Bool {
@@ -145,21 +145,21 @@ final class DashboardViewModel: ObservableObject {
     }
 
     var nextObjective: ObjectiveViewState? {
-        if !isPhaseUnlocked(.refine, in: state) {
+        if !Phase.isUnlocked(.refine, in: state) {
             return ObjectiveViewState(
                 title: "Unlock Refine",
-                detail: "Reach \(refinePhaseThreshold) total ore to power the refiner.",
-                progressText: "\(state.totalOreEarned)/\(refinePhaseThreshold) ore",
-                progress: progress(current: state.totalOreEarned, threshold: refinePhaseThreshold)
+                detail: "Reach \(GameBalance.PhaseThreshold.refine) total ore to power the refiner.",
+                progressText: "\(state.totalOreEarned)/\(GameBalance.PhaseThreshold.refine) ore",
+                progress: progress(current: state.totalOreEarned, threshold: GameBalance.PhaseThreshold.refine)
             )
         }
 
-        if !isPhaseUnlocked(.deliver, in: state) {
+        if !Phase.isUnlocked(.deliver, in: state) {
             return ObjectiveViewState(
                 title: "Unlock Deliver",
-                detail: "Produce \(deliverPhaseThreshold) total parts to open the delivery bay.",
-                progressText: "\(state.totalPartsEarned)/\(deliverPhaseThreshold) parts",
-                progress: progress(current: state.totalPartsEarned, threshold: deliverPhaseThreshold)
+                detail: "Produce \(GameBalance.PhaseThreshold.deliver) total parts to open the delivery bay.",
+                progressText: "\(state.totalPartsEarned)/\(GameBalance.PhaseThreshold.deliver) parts",
+                progress: progress(current: state.totalPartsEarned, threshold: GameBalance.PhaseThreshold.deliver)
             )
         }
 
@@ -284,7 +284,7 @@ final class DashboardViewModel: ObservableObject {
     }
 
     func selectPhase(_ phase: Phase) {
-        guard isPhaseUnlocked(phase, in: state) else { return }
+        guard Phase.isUnlocked(phase, in: state) else { return }
         state.currentPhase = phase
     }
 

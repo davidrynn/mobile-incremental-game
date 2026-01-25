@@ -130,7 +130,7 @@ struct mobile_incremental_prototypeTests {
     }
 
     @Test func cadenceResetsOutsideGatherPhase() {
-        let refineState = GameState(ore: 4, totalOreEarned: refinePhaseThreshold, gatherStreak: 2, currentPhase: .refine)
+        let refineState = GameState(ore: 4, totalOreEarned: GameBalance.PhaseThreshold.refine, gatherStreak: 2, currentPhase: .refine)
         let initialHiddenState = HiddenState(pressure: 0, cadenceStep: 2)
 
         let (updatedState, updatedHiddenState) = apply(action: .primaryTap, to: refineState, hiddenState: initialHiddenState)
@@ -141,18 +141,18 @@ struct mobile_incremental_prototypeTests {
 
     @Test func phaseUnlocksRequireTotals() {
         let gatherState = GameState(ore: 0, totalOreEarned: 0)
-        let refineState = GameState(ore: 0, totalOreEarned: refinePhaseThreshold)
+        let refineState = GameState(ore: 0, totalOreEarned: GameBalance.PhaseThreshold.refine)
         let deliverState = GameState(
             ore: 0,
-            totalOreEarned: refinePhaseThreshold,
-            totalPartsEarned: deliverPhaseThreshold
+            totalPartsEarned: GameBalance.PhaseThreshold.deliver,
+            totalOreEarned: GameBalance.PhaseThreshold.refine
         )
 
-        #expect(isPhaseUnlocked(.gather, in: gatherState) == true)
-        #expect(isPhaseUnlocked(.refine, in: gatherState) == false)
-        #expect(isPhaseUnlocked(.refine, in: refineState) == true)
-        #expect(isPhaseUnlocked(.deliver, in: refineState) == false)
-        #expect(isPhaseUnlocked(.deliver, in: deliverState) == true)
+        #expect(Phase.isUnlocked(.gather, in: gatherState) == true)
+        #expect(Phase.isUnlocked(.refine, in: gatherState) == false)
+        #expect(Phase.isUnlocked(.refine, in: refineState) == true)
+        #expect(Phase.isUnlocked(.deliver, in: refineState) == false)
+        #expect(Phase.isUnlocked(.deliver, in: deliverState) == true)
     }
 
     @Test func refinePhaseAmplifiesReleaseBursts() {
@@ -160,7 +160,7 @@ struct mobile_incremental_prototypeTests {
             ore: 5,
             primaryYieldLevel: 0,
             pressureValveLevel: 0,
-            totalOreEarned: refinePhaseThreshold,
+            totalOreEarned: GameBalance.PhaseThreshold.refine,
             currentPhase: .refine
         )
         let initialHiddenState = HiddenState(pressure: 3)
@@ -177,7 +177,7 @@ struct mobile_incremental_prototypeTests {
         let refineState = GameState(
             ore: 5,
             refinementCoilsLevel: 1,
-            totalOreEarned: refinePhaseThreshold,
+            totalOreEarned: GameBalance.PhaseThreshold.refine,
             currentPhase: .refine
         )
         let initialHiddenState = HiddenState()
@@ -191,10 +191,9 @@ struct mobile_incremental_prototypeTests {
     @Test func deliverPhaseConvertsPartsIntoDisplays() {
         let deliverState = GameState(
             parts: 4,
-            primaryYieldLevel: 0,
+            totalPartsEarned: GameBalance.PhaseThreshold.deliver, primaryYieldLevel: 0,
             pressureValveLevel: 0,
-            totalOreEarned: refinePhaseThreshold,
-            totalPartsEarned: deliverPhaseThreshold,
+            totalOreEarned: GameBalance.PhaseThreshold.refine,
             currentPhase: .deliver
         )
         let initialHiddenState = HiddenState(pressure: 3)
@@ -210,9 +209,9 @@ struct mobile_incremental_prototypeTests {
     @Test func displayRigBoostsDeliveryConversion() {
         let deliverState = GameState(
             parts: 5,
+            totalPartsEarned: GameBalance.PhaseThreshold.deliver,
             displayRigLevel: 1,
-            totalOreEarned: refinePhaseThreshold,
-            totalPartsEarned: deliverPhaseThreshold,
+            totalOreEarned: GameBalance.PhaseThreshold.refine,
             currentPhase: .deliver
         )
         let initialHiddenState = HiddenState()
@@ -224,7 +223,7 @@ struct mobile_incremental_prototypeTests {
     }
 
     @Test @MainActor func upgradeViewStateShowsLockedAndRequirement() throws {
-        let viewModel = DashboardViewModel(state: GameState(ore: 0, primaryYieldLevel: 0, totalOreEarned: 0))
+        let viewModel = DashboardViewModel(state: GameState(ore: 0, primaryYieldLevel: 0, totalOreEarned: 0), hiddenState: HiddenState())
 
         let upgrade = try #require(viewModel.upgrades.first)
 
@@ -234,7 +233,7 @@ struct mobile_incremental_prototypeTests {
     }
 
     @Test @MainActor func upgradeViewStateShowsCostWhenUnlocked() throws {
-        let viewModel = DashboardViewModel(state: GameState(ore: 0, parts: 30, primaryYieldLevel: 1, totalOreEarned: 20))
+        let viewModel = DashboardViewModel(state: GameState(ore: 0, parts: 30, primaryYieldLevel: 1, totalOreEarned: 20), hiddenState: HiddenState())
 
         let upgrade = try #require(viewModel.upgrades.first)
 
@@ -244,7 +243,7 @@ struct mobile_incremental_prototypeTests {
     }
 
     @Test @MainActor func statCardsProvidePopoverDetails() throws {
-        let viewModel = DashboardViewModel(state: GameState())
+        let viewModel = DashboardViewModel(state: GameState(), hiddenState: HiddenState())
 
         let boost = try #require(viewModel.boosts.first)
         let resource = try #require(viewModel.resources.first)

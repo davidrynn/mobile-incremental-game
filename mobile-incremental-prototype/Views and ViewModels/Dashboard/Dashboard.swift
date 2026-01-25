@@ -338,7 +338,7 @@ struct Dashboard: View {
     }
 
     private func isPhaseUnlocked(_ phase: Phase) -> Bool {
-        isPhaseUnlocked(phase, in: viewModel.state)
+        Phase.isUnlocked(phase, in: viewModel.state)
     }
 
 }

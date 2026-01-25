@@ -79,15 +79,15 @@ struct UpgradesView: View {
 
             phaseUnlockCard(
                 title: "Refine",
-                progress: progress(current: viewModel.state.totalOreEarned, threshold: refinePhaseThreshold),
-                progressText: "\(viewModel.state.totalOreEarned)/\(refinePhaseThreshold) ore",
+                progress: progress(current: viewModel.state.totalOreEarned, threshold: GameBalance.PhaseThreshold.refine),
+                progressText: "\(viewModel.state.totalOreEarned)/\(GameBalance.PhaseThreshold.refine) ore",
                 detail: "Break ore to power the refiner."
             )
 
             phaseUnlockCard(
                 title: "Deliver",
-                progress: progress(current: viewModel.state.totalPartsEarned, threshold: deliverPhaseThreshold),
-                progressText: "\(viewModel.state.totalPartsEarned)/\(deliverPhaseThreshold) parts",
+                progress: progress(current: viewModel.state.totalPartsEarned, threshold: GameBalance.PhaseThreshold.deliver),
+                progressText: "\(viewModel.state.totalPartsEarned)/\(GameBalance.PhaseThreshold.deliver) parts",
                 detail: "Refine ore into parts to open the bay."
             )
         }
