@@ -201,3 +201,10 @@ For each milestone, Codex should include:
 - `Tests/` — engine tests
 
 No separate “systems” unless it’s clearly useful.
+
+Notes: Take cues from Space Rock Break: pachenko screen where resources are dropped off. Chance that resources can earn more value by slot they fall into and also by which bouncers they hit. Bouncers are upgraded by finds. 
+Expedition - here is the main action: like mellow asteroids -> shooting asteroids for wealth. Can warp once you get enough upgrades but you have limited fuel.
+and upgrade screen.
+Expedition is actually visual, retro and somewhat "fun". Must avoid asteroids.
+
+So, make this a truck or even snake, go around screen picking up different things, upgrade so can go to better screens with more interesting things, etc.
