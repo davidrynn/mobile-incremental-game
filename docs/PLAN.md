@@ -163,11 +163,11 @@ Phases emerge from upgrades, but should be represented with dedicated screens.
 9. [x] **Controlled chaos pass**
    - Add cadence sweet-spot bonuses and pressure release cycles
    - Add targeted tests for pressure release and cadence behavior
-10. [ ] **Visual elements pass**
+10. [x] **Visual elements pass**
     - Add a minimal progress indicator
     - Add button feedback (scale/glow/press)
     - Add subtle background/ambient shift tied to progression
-    - Phase dashboards now include cadence/pressure indicators and a gradient background; button feedback still needed
+    - Phase dashboards now include cadence/pressure indicators and a gradient background; button feedback completed
 
 ---
 
