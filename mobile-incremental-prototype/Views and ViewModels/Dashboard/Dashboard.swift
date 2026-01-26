@@ -197,7 +197,7 @@ struct Dashboard: View {
                         .padding(.vertical, 8)
                         .background(
                             viewModel.currentPhase == phase
-                                ? Color(red: 0.98, green: 0.62, blue: 0.28)
+                                ? accentColor(for: phase)
                                 : .white.opacity(0.12),
                             in: RoundedRectangle(cornerRadius: 12, style: .continuous)
                         )
@@ -377,14 +377,7 @@ private extension Dashboard {
     }
 
     var phaseAccentColor: Color {
-        switch viewModel.currentPhase {
-        case .gather:
-            return Color(red: 0.98, green: 0.62, blue: 0.28)
-        case .refine:
-            return Color(red: 0.42, green: 0.78, blue: 0.91)
-        case .deliver:
-            return Color(red: 0.78, green: 0.58, blue: 0.96)
-        }
+        accentColor(for: viewModel.currentPhase)
     }
 
     var progressIndicator: some View {
@@ -393,9 +386,20 @@ private extension Dashboard {
                 .font(.caption2)
                 .foregroundStyle(.white.opacity(0.6))
             ProgressView(value: viewModel.ambientProgress)
-                .tint(.white.opacity(0.85))
+                .tint(phaseAccentColor.opacity(0.9))
                 .frame(maxWidth: 160)
                 .scaleEffect(x: 1, y: 0.6, anchor: .center)
+        }
+    }
+
+    func accentColor(for phase: Phase) -> Color {
+        switch phase {
+        case .gather:
+            return Color(red: 0.98, green: 0.62, blue: 0.28)
+        case .refine:
+            return Color(red: 0.42, green: 0.78, blue: 0.91)
+        case .deliver:
+            return Color(red: 0.78, green: 0.58, blue: 0.96)
         }
     }
 
