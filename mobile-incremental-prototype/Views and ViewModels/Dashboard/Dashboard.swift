@@ -13,11 +13,7 @@ struct Dashboard: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                LinearGradient(
-                    colors: [Color(red: 0.09, green: 0.12, blue: 0.2), Color(red: 0.12, green: 0.18, blue: 0.3)],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
+                backgroundGradient
                 .ignoresSafeArea()
 
                 ScrollView {
@@ -55,6 +51,7 @@ struct Dashboard: View {
                 Text("Keep the engines humming")
                     .font(.subheadline)
                     .foregroundStyle(.white.opacity(0.7))
+                progressIndicator
             }
 
             Spacer()
@@ -169,11 +166,8 @@ struct Dashboard: View {
                     Text(viewModel.actionButtonTitle)
                         .font(.headline)
                 }
-                .frame(maxWidth: .infinity)
-                .padding()
             }
-            .buttonStyle(.borderedProminent)
-            .tint(Color(red: 0.98, green: 0.62, blue: 0.28))
+            .buttonStyle(ActionButtonStyle(accent: phaseAccentColor))
         }
         .padding()
         .background(.white.opacity(0.12), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
@@ -203,7 +197,7 @@ struct Dashboard: View {
                         .padding(.vertical, 8)
                         .background(
                             viewModel.currentPhase == phase
-                                ? Color(red: 0.98, green: 0.62, blue: 0.28)
+                                ? accentColor(for: phase)
                                 : .white.opacity(0.12),
                             in: RoundedRectangle(cornerRadius: 12, style: .continuous)
                         )
@@ -370,5 +364,95 @@ private extension Phase {
         case .deliver:
             return "Displays"
         }
+    }
+}
+
+private extension Dashboard {
+    var backgroundGradient: LinearGradient {
+        LinearGradient(
+            colors: ambientColors(for: viewModel.currentPhase, progress: viewModel.ambientProgress),
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+    }
+
+    var phaseAccentColor: Color {
+        accentColor(for: viewModel.currentPhase)
+    }
+
+    var progressIndicator: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text("Momentum")
+                .font(.caption2)
+                .foregroundStyle(.white.opacity(0.6))
+            ProgressView(value: viewModel.ambientProgress)
+                .tint(phaseAccentColor.opacity(0.9))
+                .frame(maxWidth: 160)
+                .scaleEffect(x: 1, y: 0.6, anchor: .center)
+        }
+    }
+
+    func accentColor(for phase: Phase) -> Color {
+        switch phase {
+        case .gather:
+            return Color(red: 0.98, green: 0.62, blue: 0.28)
+        case .refine:
+            return Color(red: 0.42, green: 0.78, blue: 0.91)
+        case .deliver:
+            return Color(red: 0.78, green: 0.58, blue: 0.96)
+        }
+    }
+
+    func ambientColors(for phase: Phase, progress: Double) -> [Color] {
+        let clamped = min(max(progress, 0.1), 1)
+        let lift = 0.18 + (0.12 * clamped)
+        switch phase {
+        case .gather:
+            return [
+                liftedColor(base: (0.08, 0.11, 0.18), progress: clamped, lift: lift),
+                liftedColor(base: (0.19, 0.14, 0.22), progress: clamped, lift: lift)
+            ]
+        case .refine:
+            return [
+                liftedColor(base: (0.07, 0.13, 0.2), progress: clamped, lift: lift),
+                liftedColor(base: (0.1, 0.22, 0.3), progress: clamped, lift: lift)
+            ]
+        case .deliver:
+            return [
+                liftedColor(base: (0.1, 0.1, 0.2), progress: clamped, lift: lift),
+                liftedColor(base: (0.2, 0.14, 0.28), progress: clamped, lift: lift)
+            ]
+        }
+    }
+
+    func liftedColor(base: (Double, Double, Double), progress: Double, lift: Double) -> Color {
+        let factor = lift * progress
+        return Color(
+            red: min(base.0 + factor, 1),
+            green: min(base.1 + factor, 1),
+            blue: min(base.2 + factor, 1)
+        )
+    }
+}
+
+private struct ActionButtonStyle: ButtonStyle {
+    let accent: Color
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .frame(maxWidth: .infinity)
+            .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .fill(accent.opacity(configuration.isPressed ? 0.85 : 1))
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .stroke(.white.opacity(configuration.isPressed ? 0.12 : 0.35), lineWidth: 1)
+            )
+            .foregroundStyle(.white)
+            .scaleEffect(configuration.isPressed ? 0.97 : 1)
+            .shadow(color: accent.opacity(configuration.isPressed ? 0.25 : 0.55), radius: configuration.isPressed ? 6 : 12, y: 6)
+            .animation(.easeInOut(duration: 0.15), value: configuration.isPressed)
     }
 }

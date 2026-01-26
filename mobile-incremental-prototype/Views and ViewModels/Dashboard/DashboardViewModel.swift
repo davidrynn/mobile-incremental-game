@@ -171,6 +171,10 @@ final class DashboardViewModel: ObservableObject {
         )
     }
 
+    var ambientProgress: Double {
+        nextObjective?.progress ?? 1
+    }
+
     var phaseText: String {
         switch currentPhase {
         case .gather:
