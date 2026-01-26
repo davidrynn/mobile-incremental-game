@@ -9,7 +9,7 @@ import Foundation
 
 enum GameBalance {
     enum PhaseThreshold {
-        static let refine: Int = 60
-        static let deliver: Int = 40
+        static let refine: Int = 50
+        static let deliver: Int = 300
     }
 }
